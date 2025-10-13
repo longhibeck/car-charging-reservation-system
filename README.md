@@ -2,7 +2,8 @@
 
 [![pages-build-deployment](https://github.com/longhibeck/car-charging-reservation-system/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/longhibeck/car-charging-reservation-system/actions/workflows/pages/pages-build-deployment)
 
-This is the ATDD Sandbox Project used within the [ATDD Accelerator Program](https://atdd-accelerator.optivem.com/) by [Valentina Jemuović](https://www.linkedin.com/in/valentinajemuovic/)
+This is the ATDD Sandbox Project used within the [ATDD Accelerator Program](https://atdd-accelerator.optivem.com/) by [Valentina Jemuović](https://www.linkedin.com/in/valentinajemuovic/).
+
 This project describes a system for managing the reservation of car charging points inside a company for its employees.
 
 ## Documentation
