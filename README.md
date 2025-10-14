@@ -8,8 +8,11 @@ This project describes a system for managing the reservation of car charging poi
 
 ## Documentation
 
-Read the [documentation](https://longhibeck.github.io/car-charging-reservation-system/).
+Read the [Documentation](https://longhibeck.github.io/car-charging-reservation-system/).
 
+## Project Board
+
+See the [Project Board](https://github.com/users/longhibeck/projects/2/views/1).
 
 ## License
 
