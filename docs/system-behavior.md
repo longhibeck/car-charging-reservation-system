@@ -39,6 +39,11 @@ Create Reservation
 
 Employee
 
+### Secondary Actors
+
+- Auth API
+- System Clock
+
 ### Goal
 
 The Employee successfully reserves a Charging Point for a timeframe.
@@ -52,7 +57,7 @@ The Employee successfully reserves a Charging Point for a timeframe.
 ### Main Success Scenario
 
 1. The Employee selects the date, estimated time of arrival and Car.
-2. The system tells which Charging Points are available.
+2. The system displays a list of available Charging Points.
 3. The Employee selects the Charging Point by its ID.
 4. The system calculates maximum reservation time according to selected Car details.
 5. The system identifies possible time collisions.
@@ -82,6 +87,11 @@ Cancel Reservation
 ### Primary Actor
 
 Employee
+
+### Secondary Actors
+
+- Auth API
+- System Clock
 
 ### Goal
 
@@ -197,6 +207,10 @@ Register Car
 
 Employee
 
+### Secondary Actors
+
+- Auth API
+
 ### Goal
 
 The Employee successfully registers a Car.
@@ -231,6 +245,10 @@ Deregister Car
 ### Primary Actor
 
 Employee
+
+### Secondary Actors
+
+- Auth API
 
 ### Goal
 
@@ -343,6 +361,10 @@ Add Charging Point
 
 Facility Admin
 
+### Secondary Actors
+
+- Auth API
+
 ### Goal
 
 The Facility Admin successfully adds a Charging Point
@@ -380,6 +402,10 @@ Remove Charging Point
 ### Primary Actor
 
 Facility Admin
+
+### Secondary Actors
+
+- Auth API
 
 ### Goal
 
