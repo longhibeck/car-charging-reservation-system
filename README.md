@@ -20,5 +20,5 @@ MIT License
 
 ## Contributors
 
-- [Germanno Longhi Beck](https://www.linkedin.com/in/germanno/)
-- [Valentina Jemuović](https://www.linkedin.com/in/valentinajemuovic/)
+- [Germanno Longhi Beck](https://github.com/longhibeck)
+- [Valentina Jemuović](https://github.com/valentinajemuovic)
