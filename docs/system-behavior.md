@@ -17,6 +17,7 @@ Use Cases:
 - View Reservation Details
 - Register Car
 - Deregister Car
+- View All Cars
 - View Car Details
 - Add Charging Point
 - Remove Charging Point
@@ -258,6 +259,42 @@ The Employee successfully deregisters a Car.
 - The Car is deregistered and removed from the system.
 - The Employee receives a Car deregistration confirmation.
 
+## Use Case Narrative: View All Cars
+
+### Use Case Name
+
+View All Cars
+
+### Primary Actor
+
+Employee
+
+### Secondary Actors
+
+- Auth API
+
+### Goal
+
+The Employee successfully views a list of all their registered Cars.
+
+### Preconditions
+
+- The Employee is authenticated through the Auth API.
+
+### Main Success Scenario
+
+1. The Employee requests to view their registered Cars.
+2. The system displays a list of all registered Cars with basic information.
+
+### Extensions (Alternative Flows)
+
+- 2a. No Cars registered:
+  - The system notifies the user that no Cars are registered.
+
+### Postconditions
+
+- A list of all Cars is displayed to the Employee.
+
 ## Use Case Narrative: View Car Details
 
 ### Use Case Name
@@ -268,30 +305,32 @@ View Car Details
 
 Employee
 
+### Secondary Actors
+
+- Auth API
+
 ### Goal
 
-The Employee successfully views details of their registered Cars.
+The Employee successfully views detailed information about a specific Car.
 
 ### Preconditions
 
 - The Employee is authenticated through the Auth API.
-- The Employee has at least one registered Car.
+- The Employee has selected a specific Car.
 
 ### Main Success Scenario
 
-1. The Employee requests to view their registered Cars.
-2. The system displays a list of all registered Cars.
-3. The Employee selects a specific Car.
-4. The system displays detailed information about the selected Car.
+1. The system retrieves the selected Car details.
+2. The system displays detailed information about the selected Car.
 
 ### Extensions (Alternative Flows)
 
-- 2a. No Cars registered:
-  - The system notifies the user that no Cars are registered.
+- 1a. Car not found:
+  - The system notifies the user that the Car does not exist.
 
 ### Postconditions
 
-- The Car details are displayed to the Employee.
+- The detailed Car information is displayed to the Employee.
 
 ## Use Case Narrative: Add Charging Point
 
