@@ -13,6 +13,7 @@ Use Cases:
 
 - Create Reservation
 - Cancel Reservation
+- View All Reservations
 - View Reservation Details
 - Register Car
 - Deregister Car
@@ -107,6 +108,44 @@ The Employee successfully cancels a reservation.
 - The reservation is canceled and removed from the system.
 - The Employee receives a cancellation confirmation.
 
+## Use Case Narrative: View All Reservations
+
+### Use Case Name
+
+View All Reservations
+
+### Primary Actor
+
+Employee
+
+### Secondary Actors
+
+- Auth API
+- System Clock
+
+### Goal
+
+The Employee successfully views a list of all their reservations.
+
+### Preconditions
+
+- The Employee is authenticated through the Auth API.
+
+### Main Success Scenario
+
+1. The Employee requests to view their reservations.
+2. The system uses System Clock to categorize reservations as past or future.
+3. The system displays a chronologically ordered list of all reservations with basic information.
+
+### Extensions (Alternative Flows)
+
+- 2a. No reservations found:
+  - The system notifies the user that no reservations exist.
+
+### Postconditions
+
+- A list of all reservations is displayed to the Employee with proper time context.
+
 ## Use Case Narrative: View Reservation Details
 
 ### Use Case Name
@@ -117,30 +156,34 @@ View Reservation Details
 
 Employee
 
+### Secondary Actors
+
+- Auth API
+- System Clock
+
 ### Goal
 
-The Employee successfully views details of their reservations.
+The Employee successfully views detailed information about a specific reservation.
 
 ### Preconditions
 
 - The Employee is authenticated through the Auth API.
-- The Employee has at least one reservation (past or future).
+- The Employee has selected a specific reservation.
 
 ### Main Success Scenario
 
-1. The Employee requests to view their reservations.
-2. The system displays a list of all reservations (past and future).
-3. The Employee selects a specific reservation.
-4. The system displays detailed information about the selected reservation.
+1. The system retrieves the selected reservation details.
+2. The system uses System Clock to calculate relative time information.
+3. The system displays detailed information about the selected reservation.
 
 ### Extensions (Alternative Flows)
 
-- 2a. No reservations found:
-  - The system notifies the user that no reservations exist.
+- 1a. Reservation not found:
+  - The system notifies the user that the reservation does not exist.
 
 ### Postconditions
 
-- The reservation details are displayed to the Employee.
+- The detailed reservation information is displayed to the Employee.
 
 ## Use Case Narrative: Register Car
 
