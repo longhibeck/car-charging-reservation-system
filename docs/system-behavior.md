@@ -21,6 +21,7 @@ Use Cases:
 - View Car Details
 - Add Charging Point
 - Remove Charging Point
+- View All Charging Points
 - View Charging Point Details
 
 Secondary Actors:
@@ -412,6 +413,42 @@ The Facility Admin successfully removes a Charging Point from the system.
 - The Charging Point is removed from the system.
 - The Facility Admin receives a Charging Point removal confirmation.
 
+## Use Case Narrative: View All Charging Points
+
+### Use Case Name
+
+View All Charging Points
+
+### Primary Actor
+
+Facility Admin
+
+### Secondary Actors
+
+- Auth API
+
+### Goal
+
+The Facility Admin successfully views a list of all Charging Points in the system.
+
+### Preconditions
+
+- The Facility Admin is authenticated through the Auth API.
+
+### Main Success Scenario
+
+1. The Facility Admin requests to view all Charging Points.
+2. The system displays a list of all registered Charging Points with basic information.
+
+### Extensions (Alternative Flows)
+
+- 2a. No Charging Points available:
+  - The system notifies the user that no Charging Points are registered.
+
+### Postconditions
+
+- A list of all Charging Points is displayed to the Facility Admin.
+
 ## Use Case Narrative: View Charging Point Details
 
 ### Use Case Name
@@ -422,27 +459,29 @@ View Charging Point Details
 
 Facility Admin
 
+### Secondary Actors
+
+- Auth API
+
 ### Goal
 
-The Facility Admin successfully views details of Charging Points in the system.
+The Facility Admin successfully views detailed information about a specific Charging Point.
 
 ### Preconditions
 
 - The Facility Admin is authenticated through the Auth API.
-- At least one Charging Point exists in the system.
+- The Facility Admin has selected a specific Charging Point.
 
 ### Main Success Scenario
 
-1. The Facility Admin requests to view all Charging Points.
-2. The system displays a list of all registered Charging Points.
-3. The Facility Admin selects a specific Charging Point.
-4. The system displays detailed information about the selected Charging Point.
+1. The system retrieves the selected Charging Point details.
+2. The system displays detailed information about the selected Charging Point.
 
 ### Extensions (Alternative Flows)
 
-- 2a. No Charging Points available:
-  - The system notifies the user that no Charging Points are registered.
+- 1a. Charging Point not found:
+  - The system notifies the user that the Charging Point does not exist.
 
 ### Postconditions
 
-- The Charging Point details are displayed to the Facility Admin.
+- The detailed Charging Point information is displayed to the Facility Admin.
