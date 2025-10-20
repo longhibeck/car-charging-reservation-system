@@ -1,16 +1,18 @@
-FROM ghcr.io/astral-sh/uv:latest as uv
-FROM python:3.13-slim
+FROM ghcr.io/astral-sh/uv:python3.13-trixie-slim
 
 WORKDIR /app
 
-COPY --from=uv /usr/local/bin/uv /usr/local/bin/
+# Install curl for healthcheck
+RUN apt-get update && \
+    apt-get install -y curl && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy project files
 COPY pyproject.toml uv.lock ./
 COPY src/ ./src/
 
 # Install dependencies
-RUN uv sync --frozen
+RUN uv sync --frozen --no-dev
 
 # Expose port
 EXPOSE 8080
