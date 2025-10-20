@@ -8,7 +8,7 @@ from fastapi import FastAPI
 app = FastAPI(
     title="Car Charging Reservation System",
     description="ATDD Walking Skeleton",
-    version="0.1.0"
+    version="0.1.0",
 )
 
 

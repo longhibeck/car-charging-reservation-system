@@ -15,8 +15,8 @@ dev = [
     "ruff>=0.1.0",
 ]
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "pytest>=7.4.0",
     "httpx>=0.25.0",
     "ruff>=0.1.0",
@@ -24,8 +24,10 @@ dev-dependencies = [
 
 [tool.ruff]
 line-length = 88
-select = ["E", "F", "I"]
 fix = true
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

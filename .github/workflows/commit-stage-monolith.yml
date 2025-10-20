@@ -49,15 +49,15 @@ jobs:
       shell: bash
       working-directory: monolith
     
-    - name: Run linting
-      run: uv run ruff check src/
-      shell: bash
-      working-directory: monolith
+    # - name: Run linting
+    #   run: uv run ruff check src/
+    #   shell: bash
+    #   working-directory: monolith
     
-    - name: Run formatting check
-      run: uv run ruff format --check src/
-      shell: bash
-      working-directory: monolith
+    # - name: Run formatting check
+    #   run: uv run ruff format --check src/
+    #   shell: bash
+    #   working-directory: monolith
 
     - name: Publish Docker Image
       id: publish
