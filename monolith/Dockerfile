@@ -1,12 +1,12 @@
-FROM python:3.12-slim
+FROM ghcr.io/astral-sh/uv:latest as uv
+FROM python:3.13-slim
 
 WORKDIR /app
 
-# Install uv
-RUN pip install uv
+COPY --from=uv /usr/local/bin/uv /usr/local/bin/
 
 # Copy project files
-COPY pyproject.toml ./
+COPY pyproject.toml uv.lock ./
 COPY src/ ./src/
 
 # Install dependencies
