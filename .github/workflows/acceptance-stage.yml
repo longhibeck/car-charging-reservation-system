@@ -93,9 +93,11 @@ jobs:
         cache-dependency-glob: "**/pyproject.toml"
 
     - name: Install Test Dependencies
-      working-directory: system-test
+      run: |
+        sudo rm -rf .venv
+        uv sync
       shell: bash
-      run: uv sync
+      working-directory: system-test
 
     - name: Run Acceptance Tests
       working-directory: system-test

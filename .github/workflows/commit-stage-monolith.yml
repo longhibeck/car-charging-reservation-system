@@ -46,7 +46,9 @@ jobs:
         cache-dependency-glob: "**/pyproject.toml"
     
     - name: Install dependencies
-      run: uv sync
+      run: |
+        sudo rm -rf .venv
+        uv sync
       shell: bash
       working-directory: monolith
     
