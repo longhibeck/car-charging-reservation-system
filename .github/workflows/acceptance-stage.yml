@@ -2,7 +2,7 @@ name: acceptance-stage
 
 on:
   schedule:
-    - cron: '*/30 * * * *'  # Run every 30 minutes
+    - cron: '0 */6 * * *'  # Run every 6 hours
   workflow_dispatch:
     inputs:
       force_run:
@@ -89,13 +89,9 @@ jobs:
       uses: astral-sh/setup-uv@v3
       with:
         enable-cache: true
-        cache-key-suffix: "system-test"
-        cache-dependency-glob: "**/pyproject.toml"
 
     - name: Install Test Dependencies
-      run: |
-        sudo rm -rf .venv
-        uv sync
+      run: uv sync --reinstall
       shell: bash
       working-directory: system-test
 

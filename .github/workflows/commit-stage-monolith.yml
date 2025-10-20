@@ -42,13 +42,9 @@ jobs:
       uses: astral-sh/setup-uv@v3
       with:
         enable-cache: true
-        cache-key-suffix: "monolith"
-        cache-dependency-glob: "**/pyproject.toml"
     
     - name: Install dependencies
-      run: |
-        sudo rm -rf .venv
-        uv sync
+      run: uv sync --reinstall
       shell: bash
       working-directory: monolith
     
