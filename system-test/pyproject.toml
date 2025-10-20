@@ -1,0 +1,26 @@
+[project]
+name = "car-charging-system-test"
+version = "0.1.0"
+description = "System tests for Car Charging Reservation System"
+requires-python = ">=3.12"
+dependencies = [
+    "pytest>=7.4.0",
+    "requests>=2.31.0",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.4.0",
+    "requests>=2.31.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v"
+markers = [
+    "smoke: Smoke tests for basic functionality",
+    "acceptance: Acceptance tests for user scenarios",
+]
