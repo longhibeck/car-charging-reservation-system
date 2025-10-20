@@ -83,16 +83,18 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.12'
+        python-version: '3.13'
 
     - name: Install uv
       uses: astral-sh/setup-uv@v3
       with:
         enable-cache: true
-        cache-dependency-glob: "system-test/**/uv.lock"
+        cache-key-suffix: "system-test"
+        cache-dependency-glob: "**/pyproject.toml"
 
     - name: Install Test Dependencies
       working-directory: system-test
+      shell: bash
       run: uv sync
 
     - name: Run Acceptance Tests
