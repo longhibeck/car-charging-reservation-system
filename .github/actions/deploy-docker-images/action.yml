@@ -10,10 +10,6 @@ inputs:
   image-urls:
     description: 'Docker image URLs to deploy (JSON array format)'
     required: true
-  python-version:
-    description: 'Python version to use'
-    required: false
-    default: '3.13'
 
 runs:
   using: 'composite'
@@ -60,16 +56,15 @@ runs:
     - name: Setup Python
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ inputs.python-version }}
+        python-version: '3.13'
     
     - name: Install uv
       uses: astral-sh/setup-uv@v3
       with:
         enable-cache: true
-        cache-dependency-glob: "system-test/**/uv.lock"
     
     - name: Install dependencies with uv
-      run: uv sync
+      run: uv sync --reinstall
       shell: bash
       working-directory: system-test
         
