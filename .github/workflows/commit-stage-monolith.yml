@@ -2,19 +2,7 @@ name: commit-stage-monolith
 
 on:
   push:
-    branche    # - name: Run linting
-    #   run: uv run ruff check src/
-    #   shell: bash
-    #   working-directory: monolith
-    #   env:
-    #     UV_PROJECT_ENVIRONMENT: .venv-ci
-    # 
-    # - name: Run formatting check
-    #   run: uv run ruff format --check src/
-    #   shell: bash
-    #   working-directory: monolith
-    #   env:
-    #     UV_PROJECT_ENVIRONMENT: .venv-cin" ]
+    branches: [ "main" ] 
     paths:
         - 'monolith/**'
         - '.github/workflows/commit-stage-monolith.yml'
