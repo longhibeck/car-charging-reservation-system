@@ -94,6 +94,8 @@ jobs:
       run: uv sync --reinstall
       shell: bash
       working-directory: system-test
+      env:
+        UV_PROJECT_ENVIRONMENT: .venv-ci
 
     - name: Run Acceptance Tests
       working-directory: system-test

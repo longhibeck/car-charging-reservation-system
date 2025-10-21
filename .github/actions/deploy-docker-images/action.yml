@@ -63,19 +63,16 @@ runs:
       with:
         enable-cache: true
     
-    - name: Clean up existing virtual environment
-      run: |
-        chmod -R u+w .venv || true
-        rm -rf .venv
-      shell: bash
-      working-directory: system-test
-
     - name: Install dependencies with uv
       run: uv sync --reinstall
       shell: bash
       working-directory: system-test
+      env:
+        UV_PROJECT_ENVIRONMENT: .venv-ci
         
     - name: Run Smoke Tests
       run: uv run pytest tests/smoke-tests/ -v --tb=short
       shell: bash
       working-directory: system-test
+      env:
+        UV_PROJECT_ENVIRONMENT: .venv-ci
