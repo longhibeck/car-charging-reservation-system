@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Main Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ username }}</h1>
+    <p>This is your main dashboard.</p>
+
+    <h2>Your Cars</h2>
+    {% if cars %}
+        <ul>
+        {% for car in cars %}
+            <li>
+                {{ car.name }}
+                {% if car.connectors %}
+                    ({{ car.connectors | map(attribute='type.value') | join(', ') }})
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no cars yet.</p>
+    {% endif %}
+
+    <a href="/car">View All</a>
+    <a href="/logout">Logout</a>
+</body>
+</html>

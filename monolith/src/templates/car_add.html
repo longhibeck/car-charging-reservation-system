@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Cars</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1>Welcome, {{ username }}</h1>
+    <p>This is your car dashboard.</p>
+    <h2>Add New Car</h2>
+    <form method="post" action="/car/add">
+        <div class="form-group">
+            <label for="name">Car Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter here the car name" required>
+        </div>
+        <div class="form-group">
+            <label>Connector Types</label>
+            <div>
+                {% for ctype in connector_types %}
+                <input type="checkbox" id="ctype_{{ ctype.name }}" name="connector_types" value="{{ ctype.name }}">
+                <label for="ctype_{{ ctype.name }}">{{ ctype.value }}</label>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="battery_charge_limit">Battery Charge Limit [%] </label>
+            <input type="number" id="battery_charge_limit" name="battery_charge_limit" required>
+        </div>
+        <div class="form-group">
+            <label for="battery_size">Battery Size [kWh]</label>
+            <input type="number" id="battery_size" name="battery_size" required>
+        </div>
+        <div class="form-group">
+            <label for="max_kw_ac">Max. KW effect for AC [kW]</label>
+            <input type="number" id="max_kw_ac" name="max_kw_ac" required>
+        </div>
+        <div class="form-group">
+            <label for="max_kw_dc">Max. KW effect for DC [kW]</label>
+            <input type="number" id="max_kw_dc" name="max_kw_dc" required>
+        </div>
+        <button type="submit">Add Car</button>
+    </form>
+</body>
+</html>

@@ -13,6 +13,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from database import create_tables
 from views.auth_views import router as auth_router
 from views.car_views import router as car_router
+from views.dashboard_views import router as dashboard_router
 
 app = FastAPI(
     title="Car Charging Reservation System",
@@ -21,8 +22,8 @@ app = FastAPI(
 )
 
 create_tables()
-# app.include_router(car_router, prefix="/cars")
 app.add_middleware(SessionMiddleware, secret_key="your-secret-key")
+app.include_router(dashboard_router)
 app.include_router(auth_router)
 app.include_router(car_router)
 
@@ -35,12 +36,6 @@ if os.path.exists(static_dir):
 async def health_check():
     """Health check endpoint"""
     return {"status": "healthy"}
-
-
-@app.get("/")
-async def root():
-    """Root endpoint"""
-    return {"message": "Car Charging Reservation System"}
 
 
 @app.get("/favicon.ico")

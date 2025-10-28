@@ -40,17 +40,10 @@ async def login(
                 LOGIN_URL, json={"username": username, "password": password}
             )
 
-        print(f"DummyJSON response status: {response.status_code}")
-        print(f"DummyJSON response: {response.text}")
-
         if response.status_code == 200:
             data = response.json()
-            external_user_id = data.get("id")  # Get stable DummyJSON user ID
-            current_username = data.get("username")  # Get current username
-
-            print(
-                f"DummyJSON user ID: {external_user_id}, username: {current_username}"
-            )
+            external_user_id = data.get("id")
+            current_username = data.get("username")
 
             if not external_user_id:
                 return templates.TemplateResponse(
@@ -61,13 +54,11 @@ async def login(
                     },
                 )
 
-            # Find user by external_user_id (stable identifier)
             existing_user = (
                 db.query(User).filter(User.external_user_id == external_user_id).first()
             )
 
             if not existing_user:
-                # Auto-create user with external_user_id
                 new_user = User(
                     external_user_id=external_user_id, username=current_username
                 )
@@ -78,7 +69,6 @@ async def login(
                     f"Created new user: {current_username} (external_id: {external_user_id})"
                 )
             else:
-                # Update username if it changed in DummyJSON
                 if existing_user.username != current_username:
                     old_username = existing_user.username
                     existing_user.username = current_username
@@ -87,10 +77,8 @@ async def login(
                         f"Updated username for user {external_user_id}: {old_username} -> {current_username}"
                     )
 
-            # Create token using stable external_user_id
             token = create_token(str(external_user_id))
 
-            # Store both username (for display) and external_user_id (for lookups) in session
             request.session.update(
                 {
                     "token": token,
@@ -99,7 +87,7 @@ async def login(
                 }
             )
 
-            next_url = request.session.pop("next_url", "/car")
+            next_url = request.session.pop("next_url", "/")
             return RedirectResponse(url=next_url, status_code=302)
         else:
             error_msg = "Invalid credentials"
