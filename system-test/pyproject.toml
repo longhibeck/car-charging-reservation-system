@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "System tests for Car Charging Reservation System"
 requires-python = ">=3.12"
 dependencies = [
+    "playwright>=1.55.0",
     "pytest>=7.4.0",
     "requests>=2.31.0",
 ]
@@ -20,7 +21,3 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = "-v"
-markers = [
-    "smoke: Smoke tests for basic functionality",
-    "acceptance: Acceptance tests for user scenarios",
-]

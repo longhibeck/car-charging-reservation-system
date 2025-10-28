@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   app:
-    build: ../monolith
+    image: ghcr.io/longhibeck/car-charging-reservation-system/monolith:latest
     ports:
       - "8080:8080"
     healthcheck:
@@ -11,13 +11,3 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-
-  test:
-    build: .
-    depends_on:
-      app:
-        condition: service_healthy
-    volumes:
-      - .:/workspace
-    working_dir: /workspace
-    command: ["uv", "run", "pytest", "-v"]
