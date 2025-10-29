@@ -1,8 +1,3 @@
-"""
-Walking skeleton for Car Charging Reservation System.
-Minimal FastAPI application to get started with ATDD.
-"""
-
 import os
 
 from fastapi import FastAPI
