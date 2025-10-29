@@ -1,24 +1,13 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Your Cars</title>
-        <link rel="stylesheet" href="/static/styles.css">
-</head>
-
-<body>
-    <h1>Welcome, {{ username }}</h1>
-    <p>This is your car dashboard.</p>
-    <h2>Your Cars</h2>
-    {% if cars %}
-    {% for car in cars %}
-    <p>{{ car.name }}</p>
-    {% endfor %}
-    {% else %}
-    <p>No cars yet.</p>
-    {% endif %}
-    <a href="/car/add">Add Car</a>
-    <a href="/logout">Logout</a>
-</body>
-
-</html>
+{% block content %}
+<h2>Your Cars</h2>
+{% if cars %}
+{% for car in cars %}
+<p>{{ car.name }}</p>
+{% endfor %}
+{% else %}
+<p>No cars yet.</p>
+{% endif %}
+<a href="/car/add">Add Car</a>
+{% endblock %}

@@ -6,7 +6,6 @@ Minimal FastAPI application to get started with ATDD.
 import os
 
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -36,15 +35,6 @@ if os.path.exists(static_dir):
 async def health_check():
     """Health check endpoint"""
     return {"status": "healthy"}
-
-
-@app.get("/favicon.ico")
-async def favicon():
-    """Serve the favicon file"""
-    favicon_path = os.path.join(os.path.dirname(__file__), "static", "favicon.ico")
-    if os.path.exists(favicon_path):
-        return FileResponse(favicon_path, media_type="image/x-icon")
-    return Response(content="", media_type="image/x-icon")
 
 
 if __name__ == "__main__":
