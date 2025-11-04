@@ -26,4 +26,4 @@ MIT License
 ## Contributors
 
 - [Germanno Longhi Beck](https://github.com/longhibeck)
-- [Valentina Jemuović](https://github.com/valentinajemuovic)
+- [Valentina Jemuović](https://github.com/valentinajemuovic) (ATDD Coach)
