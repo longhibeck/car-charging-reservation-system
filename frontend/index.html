@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Charging Reservation System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body x-data="app()" x-init="init()">
+    <header>
+        <div>
+            <h1>Car Charging Reservation System</h1>
+        </div>
+        <div x-show="user" class="user-info">
+            <span>Logged in as <span x-text="user?.username"></span></span>
+            <button @click="logout()" style="margin-left: 10px;">Logout</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Login Page -->
+        <div x-show="currentPage === 'login'" x-transition>
+            <section>
+                <h2>Login</h2>
+                <div x-show="error" class="error" x-text="error"></div>
+                <form @submit.prevent="login()">
+                    <div>
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" x-model="loginForm.username" required>
+                    </div>
+                    <div>
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" x-model="loginForm.password" required>
+                    </div>
+                    <button type="submit" :disabled="loading">
+                        <span x-show="!loading">Login</span>
+                        <span x-show="loading">Logging in...</span>
+                    </button>
+                </form>
+            </section>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div x-show="currentPage === 'dashboard'" x-transition>
+            <section>
+                <h2>Your Reservations</h2>
+                <p>No reservations yet.</p>
+            </section>
+            <section>
+                <h2>Your Cars</h2>
+                <div x-show="cars.length === 0">
+                    <p>No cars yet.</p>
+                </div>
+                <div x-show="cars.length > 0">
+                    <template x-for="car in cars.slice(0, 3)" :key="car.id">
+                        <p x-text="car.name"></p>
+                    </template>
+                </div>
+                <button @click="navigateTo('cars')">View All</button>
+            </section>
+        </div>
+
+        <!-- Cars Page -->
+        <div x-show="currentPage === 'cars'" x-transition>
+            <h2>Your Cars</h2>
+            <div x-show="cars.length === 0">
+                <p>No cars yet.</p>
+            </div>
+            <div x-show="cars.length > 0">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Connectors</th>
+                            <th>Battery Charge Limit (%)</th>
+                            <th>Battery Size (kWh)</th>
+                            <th>Max kW AC</th>
+                            <th>Max kW DC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="car in cars" :key="car.id">
+                            <tr>
+                                <td x-text="car.name"></td>
+                                <td x-text="car.connectors?.map(c => c.type?.value || c.type).join(', ') || '-'"></td>
+                                <td x-text="car.battery_charge_limit"></td>
+                                <td x-text="car.battery_size"></td>
+                                <td x-text="car.max_kw_ac"></td>
+                                <td x-text="car.max_kw_dc"></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+            <button @click="navigateTo('add-car')">Add Car</button>
+            <button @click="navigateTo('dashboard')">Back to Dashboard</button>
+        </div>
+
+        <!-- Add Car Page -->
+        <div x-show="currentPage === 'add-car'" x-transition>
+            <h2>Add Car</h2>
+            <div x-show="error" class="error" x-text="error"></div>
+            <form @submit.prevent="addCar()">
+                <div>
+                    <label for="car-name">Car Name:</label>
+                    <input type="text" id="car-name" x-model="carForm.name" required>
+                </div>
+                
+                <div>
+                    <label>Connector Types:</label>
+                    <template x-for="connectorType in connectorTypes" :key="connectorType">
+                        <div>
+                            <input 
+                                type="checkbox" 
+                                :id="'connector-' + connectorType" 
+                                :value="connectorType"
+                                x-model="carForm.connector_types"
+                            >
+                            <label :for="'connector-' + connectorType" x-text="connectorType"></label>
+                        </div>
+                    </template>
+                </div>
+
+                <div>
+                    <label for="battery-charge-limit">Battery Charge Limit (%):</label>
+                    <input type="number" id="battery-charge-limit" x-model="carForm.battery_charge_limit" min="1" max="100" required>
+                </div>
+
+                <div>
+                    <label for="battery-size">Battery Size (kWh):</label>
+                    <input type="number" id="battery-size" x-model="carForm.battery_size" min="1" required>
+                </div>
+
+                <div>
+                    <label for="max-kw-ac">Max kW AC:</label>
+                    <input type="number" id="max-kw-ac" x-model="carForm.max_kw_ac" min="1" required>
+                </div>
+
+                <div>
+                    <label for="max-kw-dc">Max kW DC:</label>
+                    <input type="number" id="max-kw-dc" x-model="carForm.max_kw_dc" min="1" required>
+                </div>
+
+                <button type="submit" :disabled="loading">
+                    <span x-show="!loading">Add Car</span>
+                    <span x-show="loading">Adding...</span>
+                </button>
+                <button type="button" @click="navigateTo('cars')">Cancel</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>ATTD Accelerator Sandbox Project</p>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
