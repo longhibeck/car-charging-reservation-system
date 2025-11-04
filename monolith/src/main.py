@@ -1,29 +1,18 @@
-import os
-
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 
+from api.router import router as api_router
 from database import create_tables
-from views.auth_views import router as auth_router
-from views.car_views import router as car_router
-from views.dashboard_views import router as dashboard_router
 
 app = FastAPI(
-    title="Car Charging Reservation System",
-    description="ATDD Walking Skeleton",
+    title="Car Charging Reservation System - API",
+    description="API Backend for Car Charging System",
     version="0.1.0",
 )
 
 create_tables()
 app.add_middleware(SessionMiddleware, secret_key="your-secret-key")
-app.include_router(dashboard_router)
-app.include_router(auth_router)
-app.include_router(car_router)
-
-static_dir = os.path.join(os.path.dirname(__file__), "static")
-if os.path.exists(static_dir):
-    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+app.include_router(api_router)
 
 
 @app.get("/health")
