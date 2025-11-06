@@ -25,7 +25,7 @@ def test_auth_endpoint_exists(api_client):
 
 def test_core_business_endpoint_exists(api_client):
     """Test that core business endpoint (cars) exists and responds"""
-    response = api_client.get("/api/v1/cars")
+    response = api_client.get("/api/v1/cars/")
 
     assert response.status_code in [200, 401]
 
@@ -36,7 +36,6 @@ def test_frontend_loads(api_client):
 
     assert response.status_code == 200
     assert "text/html" in response.headers.get("content-type", "")
-    # Verify it's our Alpine.js app
     assert "<title>Car Charging Reservation System</title>" in response.text
 
 
