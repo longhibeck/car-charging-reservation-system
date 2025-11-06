@@ -1,0 +1,97 @@
+name: commit-stage-frontend
+
+on:
+  push:
+    branches: [ "main" ] 
+    paths:
+        - 'frontend/**'
+        - '.github/workflows/commit-stage-frontend.yml'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+        - 'frontend/**'
+        - '.github/workflows/commit-stage-frontend.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: commit-stage-frontend-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    outputs:
+      image-latest-url: ${{ steps.publish.outputs.image-latest-url }}
+      image-digest-url: ${{ steps.publish.outputs.image-digest-url }}
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js (for linting/validation tools)
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+      
+    # Optional: Install tools for HTML/CSS/JS validation
+    - name: Install validation tools
+      run: |
+        npm install -g htmlhint stylelint eslint
+      continue-on-error: true
+    
+    # Optional: Validate HTML files
+    - name: Validate HTML
+      run: |
+        find frontend -name "*.html" -exec htmlhint {} \;
+      continue-on-error: true
+    
+    # Optional: Validate CSS files  
+    - name: Validate CSS
+      run: |
+        find frontend -name "*.css" -exec stylelint {} \;
+      continue-on-error: true
+    
+    # Optional: Validate JavaScript files
+    - name: Validate JavaScript
+      run: |
+        find frontend -name "*.js" -exec eslint {} \;
+      continue-on-error: true
+
+    # Test nginx configuration syntax
+    - name: Test nginx config
+      run: |
+        docker run --rm -v ${{ github.workspace }}/frontend/nginx.conf:/etc/nginx/conf.d/default.conf nginx:1.29-alpine nginx -t
+
+    - name: Publish Docker Image
+      id: publish
+      uses: optivem/publish-docker-image-action@v1
+      with:
+        working-directory: frontend
+        image-name: frontend
+        registry: ghcr.io
+        registry-username: ${{ github.actor }}
+        image-namespace: ${{ github.repository }}
+        image-latest-tag: latest
+        commit-sha: ${{ github.sha }}
+        dockerfile: Dockerfile
+      env:
+        REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+
+  summary:
+    needs: build
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      
+    - name: Commit Stage Summary
+      uses: optivem/summarize-commit-stage-action@v1
+      with:
+        stage-result: ${{ needs.build.result }}
+        success-artifact-url: ${{ needs.build.outputs.image-latest-url }}

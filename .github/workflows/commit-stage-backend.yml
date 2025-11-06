@@ -1,20 +1,20 @@
-name: commit-stage-monolith
+name: commit-stage-backend
 
 on:
   push:
     branches: [ "main" ] 
     paths:
-        - 'monolith/**'
-        - '.github/workflows/commit-stage-monolith.yml'
+        - 'backend/**'
+        - '.github/workflows/commit-stage-backend.yml'
   pull_request:
     branches: [ "main" ]
     paths:
-        - 'monolith/**'
-        - '.github/workflows/commit-stage-monolith.yml'
+        - 'backend/**'
+        - '.github/workflows/commit-stage-backend.yml'
   workflow_dispatch:
 
 concurrency:
-  group: commit-stage-monolith-${{ github.ref }}
+  group: commit-stage-backend-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -46,26 +46,26 @@ jobs:
     - name: Install dependencies
       run: uv sync --reinstall
       shell: bash
-      working-directory: monolith
+      working-directory: backend
       env:
         UV_PROJECT_ENVIRONMENT: .venv-ci
     
     # - name: Run linting
     #   run: uv run ruff check src/
     #   shell: bash
-    #   working-directory: monolith
+    #   working-directory: backend
     
     # - name: Run formatting check
     #   run: uv run ruff format --check src/
     #   shell: bash
-    #   working-directory: monolith
+    #   working-directory: backend
 
     - name: Publish Docker Image
       id: publish
       uses: optivem/publish-docker-image-action@v1
       with:
-        working-directory: monolith
-        image-name: monolith
+        working-directory: backend
+        image-name: backend
         registry: ghcr.io
         registry-username: ${{ github.actor }}
         image-namespace: ${{ github.repository }}
