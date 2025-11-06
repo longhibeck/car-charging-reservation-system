@@ -58,7 +58,7 @@ async def api_login(login_data: LoginRequest, db: Session = Depends(get_db)):
 
             token = create_token(str(external_user_id))
 
-            return LoginResponse(token=token, user=UserResponse.from_orm(user))
+            return LoginResponse(token=token, user=UserResponse.model_validate(user))
         else:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
@@ -80,4 +80,4 @@ async def api_login(login_data: LoginRequest, db: Session = Depends(get_db)):
 @router.get("/me", response_model=UserResponse)
 async def get_current_user_info(current_user: User = Depends(get_current_user)):
     """Get current user information"""
-    return UserResponse.from_orm(current_user)
+    return UserResponse.model_validate(current_user)
