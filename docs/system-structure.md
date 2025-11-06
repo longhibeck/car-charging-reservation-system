@@ -2,7 +2,8 @@
 
 ## Architecture Style
 
-- Monolith (MVC App)
+- Frontend
+- Monolithic Backend
 
 ## Architecture Diagram
 
@@ -18,4 +19,4 @@ Database:
 
 ## Repository Strategy
 
-Mono-repo Repository Structure
+Frontend and Monolithic Backend Repository Structure
