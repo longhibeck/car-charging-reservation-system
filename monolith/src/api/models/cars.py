@@ -10,7 +10,8 @@ class ConnectorResponse(BaseModel):
     type: str
 
     @classmethod
-    def from_orm(cls, connector):
+    def model_validate_connector(cls, connector):
+        """Custom validation for connector objects"""
         return cls(
             id=connector.id,
             type=connector.type.value
@@ -31,11 +32,14 @@ class CarResponse(BaseModel):
     max_kw_dc: int
 
     @classmethod
-    def from_orm(cls, car):
+    def model_validate_car(cls, car):
+        """Custom validation for car objects"""
         return cls(
             id=car.id,
             name=car.name,
-            connectors=[ConnectorResponse.from_orm(c) for c in car.connectors],
+            connectors=[
+                ConnectorResponse.model_validate_connector(c) for c in car.connectors
+            ],
             battery_charge_limit=car.battery_charge_limit,
             battery_size=car.battery_size,
             max_kw_ac=car.max_kw_ac,
