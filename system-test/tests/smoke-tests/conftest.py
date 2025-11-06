@@ -4,6 +4,30 @@ import pytest
 import requests
 
 
+class APIClient:
+    """HTTP client wrapper that automatically prepends base URL"""
+
+    def __init__(self, base_url):
+        self.base_url = base_url
+        self.session = requests.Session()
+
+    def get(self, path, **kwargs):
+        url = f"{self.base_url}{path}"
+        return self.session.get(url, **kwargs)
+
+    def post(self, path, **kwargs):
+        url = f"{self.base_url}{path}"
+        return self.session.post(url, **kwargs)
+
+    def put(self, path, **kwargs):
+        url = f"{self.base_url}{path}"
+        return self.session.put(url, **kwargs)
+
+    def delete(self, path, **kwargs):
+        url = f"{self.base_url}{path}"
+        return self.session.delete(url, **kwargs)
+
+
 @pytest.fixture(scope="session")
 def api_base_url():
     """Base URL for the API"""
@@ -25,19 +49,4 @@ def api_client(api_base_url):
     else:
         pytest.fail("Service did not start within expected time")
 
-    session = requests.Session()
-    session.base_url = api_base_url
-
-    # Helper method to make requests with base URL
-    def request_with_base_url(method, path, **kwargs):
-        url = f"{api_base_url}{path}"
-        return session.request(method, url, **kwargs)
-
-    session.get = lambda path, **kwargs: request_with_base_url("GET", path, **kwargs)
-    session.post = lambda path, **kwargs: request_with_base_url("POST", path, **kwargs)
-    session.put = lambda path, **kwargs: request_with_base_url("PUT", path, **kwargs)
-    session.delete = lambda path, **kwargs: request_with_base_url(
-        "DELETE", path, **kwargs
-    )
-
-    return session
+    return APIClient(api_base_url)
