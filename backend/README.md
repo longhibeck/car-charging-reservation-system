@@ -8,14 +8,14 @@
 
 - pip:
   ```bash
-  cd monolith
+  cd backend
   python -m venv .venv
   source .venv/bin/activate
   pip install pyproject.toml
   ```
 - uv:
   ```bash
-   cd monolith
+   cd backend
    uv venv
    source .venv/bin/activate
    uv sync
@@ -31,11 +31,11 @@
 
 1. Build the Docker image:
    ```bash
-   docker build -t car-charging-monolith ./monolith
+   docker build -t car-charging-backend ./backend
    ```
 2. Run the container:
    ```bash
-   docker run -p 8080:8080 car-charging-monolith
+   docker run -p 8080:8080 car-charging-backend
    ```
 3. Visit [http://localhost:8080](http://localhost:8080) in your browser.
 

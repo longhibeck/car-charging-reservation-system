@@ -1,5 +1,5 @@
 [project]
-name = "car-charging-monolith"
+name = "car-charging-reservation-backend"
 version = "0.1.0"
 description = "Car Charging Reservation System - ATDD Walking Skeleton"
 requires-python = ">=3.12"

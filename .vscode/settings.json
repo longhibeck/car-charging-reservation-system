@@ -1,5 +1,5 @@
 {
-  "python.defaultInterpreterPath": "./monolith/.venv/bin/python",
+  "python.defaultInterpreterPath": "./backend/.venv/bin/python",
   "python.analysis.typeCheckingMode": "basic",
   "[python]": {
     "editor.formatOnSave": true,
