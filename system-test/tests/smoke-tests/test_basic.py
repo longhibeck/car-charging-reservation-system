@@ -1,3 +1,7 @@
+# Smoke Tests - Basic "is it alive?" checks
+# These should be fast, minimal, and test core system availability
+
+
 def test_system_health_check(api_client):
     """Test that the system health endpoint is responding"""
     response = api_client.get("/health")
@@ -14,16 +18,14 @@ def test_auth_endpoint_exists(api_client):
         json={"username": "addisonw", "password": "addisonwpass"},
     )
 
-    assert response.status_code != 404
     assert response.status_code in [200, 401, 422]
 
 
 def test_core_business_endpoint_exists(api_client):
     """Test that core business endpoint (cars) exists and responds"""
-    response = api_client.get("/api/v1/cars/")
+    response = api_client.get("/api/v1/cars")
 
-    assert response.status_code != 404
-    assert response.status_code in [200, 401, 403]
+    assert response.status_code == 401
 
 
 def test_frontend_loads(api_client):
