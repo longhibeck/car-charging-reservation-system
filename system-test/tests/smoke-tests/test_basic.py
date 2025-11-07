@@ -23,7 +23,7 @@ def test_auth_endpoint_exists(api_client):
 
 def test_core_business_endpoint_exists(api_client):
     """Test that core business endpoint (cars) exists and responds"""
-    response = api_client.get("/api/v1/cars")
+    response = api_client.get("/api/v1/cars/")
 
     assert response.status_code == 401
 
