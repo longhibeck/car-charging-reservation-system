@@ -1,7 +1,8 @@
 # Car Charging Reservation System
 
 [![pages-build-deployment](https://github.com/longhibeck/car-charging-reservation-system/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/longhibeck/car-charging-reservation-system/actions/workflows/pages/pages-build-deployment)
-[![commit-stage-backend](https://github.com/longhibeck/car-charging-reservation-system/actions/workflows/commit-stage-backend.yml/badge.svg)](https://github.com/longhibeck/car-charging-reservation-system/actions/workflows/commit-stage-backend.yml)
+[![commit-stage-frontend](https://github.com/longhibeck/car-charging-reservation-frontend/actions/workflows/commit-stage-frontend.yml/badge.svg)](https://github.com/longhibeck/car-charging-reservation-frontend/actions/workflows/commit-stage-frontend.yml)
+[![commit-stage-backend](https://github.com/longhibeck/car-charging-reservation-backend/actions/workflows/commit-stage-backend.yml/badge.svg)](https://github.com/longhibeck/car-charging-reservation-backend/actions/workflows/commit-stage-backend.yml)
 [![acceptance-stage](https://github.com/longhibeck/car-charging-reservation-system/actions/workflows/acceptance-stage.yml/badge.svg)](https://github.com/longhibeck/car-charging-reservation-system/actions/workflows/acceptance-stage.yml)
 [![qa-stage](https://github.com/longhibeck/car-charging-reservation-system/actions/workflows/qa-stage.yml/badge.svg)](https://github.com/longhibeck/car-charging-reservation-system/actions/workflows/qa-stage.yml)
 [![qa-signoff](https://github.com/longhibeck/car-charging-reservation-system/actions/workflows/qa-signoff.yml/badge.svg)](https://github.com/longhibeck/car-charging-reservation-system/actions/workflows/qa-signoff.yml)

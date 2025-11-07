@@ -11,7 +11,7 @@ services:
 
   
   backend:
-    image: ghcr.io/longhibeck/car-charging-reservation-system/backend:latest
+    image: ghcr.io/longhibeck/car-charging-reservation-backend/backend:latest
     expose:
       - "8080"
     healthcheck:
