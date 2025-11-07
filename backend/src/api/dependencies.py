@@ -6,7 +6,7 @@ from database import get_db
 from models.user import User
 from utils import verify_token
 
-security = HTTPBearer()
+security = HTTPBearer(auto_error=False)
 
 
 def get_current_user(
@@ -15,6 +15,13 @@ def get_current_user(
 ) -> User:
     """Get current user from JWT token"""
     try:
+        # Check if credentials were provided
+        if not credentials:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Authorization header required",
+            )
+
         # Extract token from Bearer scheme
         token = credentials.credentials
         external_user_id = verify_token(token)
@@ -35,6 +42,9 @@ def get_current_user(
             )
 
         return user
+    except HTTPException:
+        # Re-raise HTTPExceptions as-is
+        raise
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
