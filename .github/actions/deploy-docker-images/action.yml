@@ -52,6 +52,12 @@ runs:
         max-attempts: '30'
         wait-seconds: '10'
         working-directory: system-test
+
+    - name: Run Database Migration
+      working-directory: system-test
+      shell: bash
+      run: |
+        docker compose exec -T backend uv run alembic upgrade head
       
     - name: Setup Python
       uses: actions/setup-python@v5
