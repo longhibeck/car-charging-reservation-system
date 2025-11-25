@@ -4,9 +4,12 @@ version = "0.1.0"
 description = "System tests for Car Charging Reservation System"
 requires-python = ">=3.12"
 dependencies = [
+    "httpx>=0.28.1",
     "playwright>=1.55.0",
+    "psycopg[binary]>=3.2.13",
     "pytest>=7.4.0",
-    "requests>=2.31.0",
+    "pytest-playwright>=0.7.1",
+    "sqlalchemy>=2.0.44",
 ]
 
 [dependency-groups]

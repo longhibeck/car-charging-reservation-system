@@ -1,6 +1,5 @@
-# Smoke Tests - Basic "is it alive?" checks
-# These should be fast, minimal, and test core system availability
-
+import httpx
+import pytest
 
 def test_system_health_check(api_client):
     """Test that the system health endpoint is responding"""
@@ -44,3 +43,38 @@ def test_frontend_assets_accessible(api_client):
 
     js_response = api_client.get("/js/app.js")
     assert js_response.status_code == 200
+
+
+def test_auth_external_api():
+    """Test that the external auth system (DummyJSON) is up"""
+    try:
+        with httpx.Client(timeout=10.0) as client:
+            response = client.post(
+                "https://dummyjson.com/auth/login",
+                json={"username": "ping", "password": "ping"},
+            )
+
+            assert response.status_code != 503, "DummyJSON API is unreachable"
+            assert response.status_code != 500, "DummyJSON API returned server error"
+            assert response.status_code in [200, 400, 401], (
+                f"Unexpected response from DummyJSON: {response.status_code}"
+            )
+
+    except httpx.ConnectTimeout:
+        pytest.fail("DummyJSON API is unreachable (timeout)")
+    except httpx.ConnectError:
+        pytest.fail("DummyJSON API is unreachable (connection error)")
+    except httpx.RequestError as e:
+        pytest.fail(f"DummyJSON API request failed: {e}")
+
+
+def test_auth_backend_integration(api_client):
+    """Test that our backend can integrate with the external auth system"""
+    response = api_client.post(
+        "/api/v1/auth/login",
+        json={"username": "ping", "password": "ping"},
+    )
+    
+    # Any response other than 503/500 means our backend can reach the external service
+    assert response.status_code != 503, "Backend cannot reach external auth API"
+    assert response.status_code != 500, "Backend error when calling external auth API"
