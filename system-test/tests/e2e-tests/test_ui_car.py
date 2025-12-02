@@ -1,7 +1,7 @@
 from playwright.sync_api import expect
 
 
-def test_add_car_ui(logged_in_page):
+def test_should_add_car(logged_in_page):
     # Log in
     page = logged_in_page
 
@@ -29,3 +29,24 @@ def test_add_car_ui(logged_in_page):
     expect(page.get_by_role("cell", name="60")).to_be_visible()
     expect(page.get_by_role("cell", name="11")).to_be_visible()
     expect(page.get_by_role("cell", name="50")).to_be_visible()
+
+def test_should_add_car_with_missing_field_name(logged_in_page):
+    # Log in
+    page = logged_in_page
+
+    # Go to car page
+    page.get_by_role("button", name="View All").click()
+
+    # Go to add car page
+    page.get_by_role("button", name="Add Car", exact=True).click()
+
+    page.locator("#connector-TYPE_2").check()
+
+    page.locator("#battery-charge-limit").fill("80")
+    page.locator("#battery-size").fill("60")
+    page.locator("#max-kw-ac").fill("11")
+    page.locator("#max-kw-dc").fill("50")
+
+    # Submit the form
+    page.get_by_role("button", name="Add Car", exact=True).click()
+
