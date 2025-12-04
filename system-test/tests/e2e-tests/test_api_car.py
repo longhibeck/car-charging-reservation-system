@@ -4,7 +4,7 @@ def test_should_list_cars(logged_in_api_context):
     response = logged_in_api_context.get("/api/v1/cars/")
     assert response.ok
     response_json = response.json()
-    assert response_json == {"cars": []}
+    assert response_json == []
 
 
 def test_should_create_car(logged_in_api_context):
