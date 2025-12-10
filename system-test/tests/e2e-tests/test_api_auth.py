@@ -3,7 +3,9 @@ def test_should_login(api_request_context):
     response = api_request_context.post("/api/v1/auth/login", data=data)
     response_json = response.json()
     assert response.ok
-    assert response_json["token"] is not None
+    assert response_json["access_token"] is not None
+    assert response_json["refresh_token"] is not None
+    assert response_json["token_type"] == "bearer"
     assert response_json["user"]["id"] is not None
     assert response_json["user"]["username"] == "addisonw"
     assert response_json["user"]["external_user_id"] is not None

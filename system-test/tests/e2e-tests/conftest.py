@@ -5,15 +5,9 @@ import os
 from sqlalchemy import create_engine, text
 
 
-DB_USER = os.getenv("DB_USER", "test_user")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "test_password")
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = os.getenv("DB_PORT", "5432")
-DB_NAME = os.getenv("DB_NAME", "car_charging")
+DATABASE_URL = os.getenv("DATABASE_URL", 
+    "postgresql+psycopg://test_user:test_password@localhost:5432/car_charging")
 
-DATABASE_URL = (
-    f"postgresql+psycopg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-)
 engine = create_engine(DATABASE_URL)
 
 
@@ -51,9 +45,9 @@ def logged_in_api_context(
         raise Exception(f"Login failed with status {response.status}")
 
     response_json = response.json()
-    auth_token = response_json["token"]
+    access_token = response_json["access_token"]
 
-    auth_headers = {"Authorization": f"Bearer {auth_token}"}
+    auth_headers = {"Authorization": f"Bearer {access_token}"}
     authed_context = playwright.request.new_context(
         base_url=base_url, extra_http_headers=auth_headers
     )
