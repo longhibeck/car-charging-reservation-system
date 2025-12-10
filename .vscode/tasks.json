@@ -1,0 +1,107 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "start-docker-services",
+            "type": "shell",
+            "command": "docker",
+            "args": [
+                "compose",
+                "-f",
+                "system-test/docker-compose.yml",
+                "up",
+                "-d",
+                "--pull",
+                "always"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "run-database-migration",
+            "type": "shell",
+            "command": "docker",
+            "args": [
+                "compose",
+                "-f",
+                "system-test/docker-compose.yml",
+                "exec",
+                "backend",
+                "uv",
+                "run",
+                "alembic",
+                "upgrade",
+                "head"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": "start-docker-services"
+        },
+        {
+            "label": "setup-test-environment",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "start-docker-services",
+                "run-database-migration"
+            ],
+            "type": "shell",
+            "command": "echo",
+            "args": [
+                "✅ Test environment ready!"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "run-tests-with-docker",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "setup-test-environment"
+            ],
+            "type": "shell",
+            "command": "cd system-test && uv run pytest tests/ -v",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "stop-docker-services",
+            "type": "shell",
+            "command": "docker",
+            "args": [
+                "compose",
+                "-f",
+                "system-test/docker-compose.yml",
+                "down"
+            ],
+            "group": "build"
+        }
+    ]
+}
