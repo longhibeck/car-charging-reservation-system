@@ -42,7 +42,7 @@ def test_should_update_car(logged_in_api_context):
     car_id = created_car["id"]
     updated_data = {
         "name": "BYD Seal",
-        "connector_types": ["Type-2"],
+        "connector_types": ["Type 2"],
         "battery_charge_limit": 80,
         "battery_size": 87,
         "max_kw_ac": 11,
@@ -53,7 +53,7 @@ def test_should_update_car(logged_in_api_context):
     updated_car = update_response.json()
     assert updated_car["id"] == car_id
     assert updated_car["name"] == "BYD Seal"
-    assert updated_car["connector_types"] == ["Type-2"]
+    assert updated_car["connector_types"] == ["Type 2"]
     assert updated_car["battery_charge_limit"] == 80
 
 def test_should_get_car(logged_in_api_context):
