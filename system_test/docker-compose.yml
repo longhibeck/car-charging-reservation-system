@@ -1,0 +1,48 @@
+services:
+  frontend:
+    image: ghcr.io/longhibeck/car-charging-reservation-frontend/frontend:latest
+    ports:
+      - "8080:80"
+    depends_on:
+        backend:
+          condition: service_healthy
+
+  backend:
+    image: ghcr.io/longhibeck/car-charging-reservation-backend/backend:latest
+    environment:
+      DATABASE_URL: "postgresql+psycopg://test_user:test_password@database:5432/car_charging"
+      CHARGING_POINTS_URL: "http://charging-points:80"
+      no_proxy: "localhost,127.0.0.1,charging-points"
+      NO_PROXY: "localhost,127.0.0.1,charging-points"
+    expose:
+      - "8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+        database:
+          condition: service_healthy
+
+  database:
+    image: postgres:18.0-alpine
+    environment:
+      POSTGRES_DB: car_charging
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user -d car_charging"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  charging-points:
+    image: openresty/openresty:1.27.1.2-0-alpine
+    volumes:
+      - ./charging-points/api.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./charging-points/data.json:/usr/share/nginx/html/data.json:ro
+    ports:
+      - "8081:80"

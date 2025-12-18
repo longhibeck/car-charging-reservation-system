@@ -1,0 +1,34 @@
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440001",
+    "name": "CP-001",
+    "status": "available",
+    "connector_type": "Type 2",
+    "charging_type": "AC",
+    "max_power_kw": 22
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440002", 
+    "name": "CP-002",
+    "status": "occupied", 
+    "connector_type": "CCS",
+    "charging_type": "DC",
+    "max_power_kw": 150
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440003",
+    "name": "CP-003", 
+    "status": "available",
+    "connector_type": "CHAdeMO", 
+    "charging_type": "DC",
+    "max_power_kw": 50
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440004",
+    "name": "CP-004",
+    "status": "maintenance",
+    "connector_type": "Type 2", 
+    "charging_type": "AC",
+    "max_power_kw": 11
+  }
+]
