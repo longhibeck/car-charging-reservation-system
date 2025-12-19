@@ -1,7 +1,12 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from playwright.sync_api import expect
 from system_test.core.clients.commons.page_test_client import PageTestClient
 
-from system_test.core.clients.system.ui.pages.home_page import HomePage
+if TYPE_CHECKING:
+    from system_test.core.clients.system.ui.pages.home_page import HomePage
 
 
 class LoginPage:
@@ -41,9 +46,10 @@ class LoginPage:
         """Click login button (doesn't wait for navigation)"""
         self.page_client.click_by_role("button", name=self.LOGIN_BUTTON)
 
-    def login(self, username: str, password: str):
+    def login(self, username: str, password: str) -> HomePage:
         """Complete login flow and return HomePage after successful login"""
-
+        from system_test.core.clients.system.ui.pages.home_page import HomePage
+        
         self.fill_username(username)
         self.fill_password(password)
         self.click_login()

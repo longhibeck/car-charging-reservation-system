@@ -17,9 +17,9 @@ class PageTestClient:
         """Click an element"""
         self.page.click(selector)
 
-    def click_by_role(self, role: str, name: str):
+    def click_by_role(self, role: str, name: str, exact: bool = False):
         """Click element by role and name"""
-        self.page.get_by_role(role, name=name).click()
+        self.page.get_by_role(role, name=name, exact=exact).click()
 
     def fill(self, selector: str, value: str):
         """Fill an input field"""

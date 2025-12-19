@@ -15,8 +15,6 @@ class CarChargingReservationUiClient:
         self._page = page
         self.base_url = base_url
         self._page_client = PageTestClient(page, base_url)
-        self._login_page = LoginPage(self._page_client)
-        self._home_page = HomePage(self._page_client)
         self._response: Response | None = None
 
     @staticmethod
@@ -29,15 +27,17 @@ class CarChargingReservationUiClient:
         Check if user is authenticated by examining auth state.
         Tries multiple strategies to detect authentication.
         """
-    # Primary strategy: Check if we're seeing authenticated UI
-        # This is the most reliable method for SPAs
-        if self._home_page.is_loaded():
+        # Create page objects on-demand for checking
+        home_page = HomePage(self._page_client)
+        login_page = LoginPage(self._page_client)
+        
+        # Primary strategy: Check if we're seeing authenticated UI
+        if home_page.is_loaded():
             return True
         
         # Fallback: Check if we're on login page (proves NOT authenticated)
-        if self._login_page.is_loaded():
+        if login_page.is_loaded():
             return False
-
 
         # Strategy 1: Check for auth token in localStorage
         token = self._page.evaluate("() => localStorage.getItem('token')")
@@ -71,11 +71,11 @@ class CarChargingReservationUiClient:
         # Wait for SPA to finish client-side routing
         self._page.wait_for_load_state("networkidle")
 
-        # Check if user is authenticated
+        # Create page objects on-demand and return the appropriate one
         if self.is_authenticated():
-            return self._home_page
+            return HomePage(self._page_client)
         else:
-            return self._login_page
+            return LoginPage(self._page_client)
 
     def open_home_page(self) -> HomePage:
         """
@@ -87,7 +87,7 @@ class CarChargingReservationUiClient:
             raise Exception("No response from navigation")
         
         self._page.wait_for_load_state("networkidle")
-        return self._home_page
+        return HomePage(self._page_client)
     
     def assert_home_page_loaded(self) -> None:
         """
@@ -110,9 +110,9 @@ class CarChargingReservationUiClient:
         if not self._page:
             raise AssertionError("Page is not initialized")
         
-        # Optional: Check HTML structure has expected elements
-        # This ensures the page actually rendered, not just returned HTML
-        if not self._home_page.is_loaded():
+        # Create home page on-demand to check if loaded
+        home_page = HomePage(self._page_client)
+        if not home_page.is_loaded():
             raise AssertionError("Home page HTML loaded but UI elements not visible")
     
     def assert_response_ok(self) -> None:
@@ -142,15 +142,12 @@ class CarChargingReservationUiClient:
             return None
         return self._response.headers.get(self.CONTENT_TYPE)
 
-    def login_page(self) -> LoginPage:
-        """Get login page instance"""
-        return self._login_page
-
-    def home_page(self) -> HomePage:
-        """Get home page instance"""
-        return self._home_page
-
     @property
     def page(self) -> Page:
         """Get underlying Playwright page"""
         return self._page
+    
+    @property
+    def page_client(self) -> PageTestClient:
+        """Get page client for creating page objects"""
+        return self._page_client
