@@ -1,8 +1,14 @@
+import os
+from typing import Generator
+
 import pytest
 from playwright.sync_api import Playwright, APIRequestContext, Page
-from typing import Generator
-import os
 from sqlalchemy import create_engine, text
+
+from system_test.core.clients.client_factory import ClientFactory
+from system_test.core.clients.system.api.car_charging_reservation_api_client import CarChargingReservationApiClient
+from system_test.core.clients.system.ui.car_charging_reservation_ui_client import CarChargingReservationUiClient
+from system_test.core.clients.system.ui.pages.home_page import HomePage
 
 
 DATABASE_URL = os.getenv(
@@ -127,17 +133,35 @@ def clean_db():
         pass
 
 
-
-from system_test.core.clients.client_factory import ClientFactory
-from system_test.core.clients.system.ui.pages.home_page import HomePage
-from system_test.core.clients.system.ui.car_charging_reservation_ui_client import CarChargingReservationUiClient
-
-from playwright.sync_api import Page
-
 @pytest.fixture
 def car_charging_reservation_ui_client(page: Page) -> CarChargingReservationUiClient:
     return ClientFactory.create_car_charging_reservation_ui_client(page)
 
+@pytest.fixture
+def car_charging_reservation_api_client() -> CarChargingReservationApiClient:
+    return ClientFactory.create_car_charging_reservation_api_client()
+
+
+@pytest.fixture
+def authenticated_api_client() -> CarChargingReservationApiClient:
+    """
+    Fixture that provides an authenticated API client.
+    Logs in and sets the auth token for subsequent requests.
+    """
+    api_client = ClientFactory.create_car_charging_reservation_api_client()
+    
+    # Login to get token
+    response = api_client.auth().login(username="addisonw", password="addisonwpass")
+    auth_data = api_client.auth().assert_login_successful(response)
+    access_token = auth_data["access_token"]
+    
+    # Set auth token for all controllers
+    api_client.http_client.set_auth_token(access_token)
+    
+    return api_client
+
+
+# Analyse usage
 @pytest.fixture
 def authenticated_home_page(car_charging_reservation_ui_client: CarChargingReservationUiClient) -> HomePage:
     """

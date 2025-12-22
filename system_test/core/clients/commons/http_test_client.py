@@ -1,21 +1,36 @@
 import httpx
 from http import HTTPStatus
+from typing import TypeVar
+
+# Generic type for JSON response bodies
+T = TypeVar('T')
 
 
 class HttpTestClient:
-    def __init__(self, base_url: str):
+    def __init__(self, base_url: str, auth_token: str | None = None):
+        headers = {"Content-Type": "application/json"}
+        if auth_token:
+            headers["Authorization"] = f"Bearer {auth_token}"
+            
         self.client = httpx.Client(
             base_url=base_url,
-            headers={"Content-Type": "application/json"},
+            headers=headers,
             follow_redirects=True,
             verify=False
         )
+
+    def set_auth_token(self, token: str) -> None:
+        """Set authentication token for subsequent requests"""
+        self.client.headers["Authorization"] = f"Bearer {token}"
 
     def get(self, path: str) -> httpx.Response:
         return self.client.get(path)
 
     def post(self, path: str, request_body: dict | None = None) -> httpx.Response:
         return self.client.post(path, json=request_body)
+    
+    def put(self, path: str, request_body: dict | None = None) -> httpx.Response:
+        return self.client.put(path, json=request_body)
 
     def assert_ok(self, response: httpx.Response) -> None:
         self._assert_status(response, HTTPStatus.OK)
@@ -44,5 +59,6 @@ class HttpTestClient:
                 f"Response body: {body_text}"
             )
 
-    def read_body(self, response: httpx.Response) -> dict:
+    def read_body(self, response: httpx.Response) -> T:
+        """Read and parse JSON response body with proper type hints"""
         return response.json()

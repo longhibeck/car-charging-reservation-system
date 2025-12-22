@@ -21,9 +21,14 @@ class ClientFactory:
             SystemTestConfiguration.get_charging_points_base_url()
         )
 
-    #   @staticmethod
-    #  def create_car_charging_reservation_api_client()->CarChargingReservationUiClient:
-    #      return ChargingPointsApiClient.create(SystemTestConfiguration.get_charging_points_base_url())
+    @staticmethod
+    def create_car_charging_reservation_api_client():
+        """Create API client with configuration"""
+        from system_test.core.clients.system.api.car_charging_reservation_api_client import (
+            CarChargingReservationApiClient,
+        )
+        base_url = SystemTestConfiguration.get_car_charging_reservation_api_base_url()
+        return CarChargingReservationApiClient.create(base_url)
 
     @staticmethod
     def create_car_charging_reservation_ui_client(
