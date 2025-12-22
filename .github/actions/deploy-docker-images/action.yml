@@ -43,7 +43,7 @@ runs:
         echo "🐳 Starting Docker Compose for simulated deployment..."
         docker compose up -d
       shell: bash
-      working-directory: system-test
+      working-directory: system_test
 
     - name: Wait for Application to be Ready
       uses: optivem/wait-for-docker-compose-action@v1
@@ -51,10 +51,10 @@ runs:
         url: 'http://localhost:8080/'
         max-attempts: '30'
         wait-seconds: '10'
-        working-directory: system-test
+        working-directory: system_test
 
     - name: Run Database Migration
-      working-directory: system-test
+      working-directory: system_test
       shell: bash
       run: |
         docker compose exec -T backend uv run alembic upgrade head
@@ -72,13 +72,13 @@ runs:
     - name: Install dependencies with uv
       run: uv sync --reinstall
       shell: bash
-      working-directory: system-test
+      working-directory: system_test
       env:
         UV_PROJECT_ENVIRONMENT: .venv-ci
         
     - name: Run Smoke Tests
       run: uv run pytest tests/smoke-tests/ -v --tb=short
       shell: bash
-      working-directory: system-test
+      working-directory: system_test
       env:
         UV_PROJECT_ENVIRONMENT: .venv-ci

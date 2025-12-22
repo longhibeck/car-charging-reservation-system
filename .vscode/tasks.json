@@ -8,7 +8,7 @@
             "args": [
                 "compose",
                 "-f",
-                "system-test/docker-compose.yml",
+                "system_test/docker-compose.yml",
                 "up",
                 "-d",
                 "--pull",
@@ -34,7 +34,7 @@
             "args": [
                 "compose",
                 "-f",
-                "system-test/docker-compose.yml",
+                "system_test/docker-compose.yml",
                 "exec",
                 "backend",
                 "uv",
@@ -76,7 +76,7 @@
                 "setup-test-environment"
             ],
             "type": "shell",
-            "command": "cd system-test && uv run pytest tests/ -v",
+            "command": "cd system_test && uv run pytest tests/ -v",
             "group": {
                 "kind": "test",
                 "isDefault": true
@@ -98,7 +98,7 @@
             "args": [
                 "compose",
                 "-f",
-                "system-test/docker-compose.yml",
+                "system_test/docker-compose.yml",
                 "down"
             ],
             "group": "build"
