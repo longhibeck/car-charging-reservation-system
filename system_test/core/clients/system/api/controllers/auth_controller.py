@@ -41,7 +41,7 @@ class AuthController:
         """Assert login failed with unauthorized status"""
         self.http_client.assert_unauthorized(response)
 
-    def assert_current_user_retrieved(self, response: httpx.Response) -> CurrentUserResponse:
+    def assert_current_user_retrieved_successfully(self, response: httpx.Response) -> CurrentUserResponse:
         """Assert current user was retrieved and return user data"""
         self.http_client.assert_ok(response)
         return self.http_client.read_body(response)

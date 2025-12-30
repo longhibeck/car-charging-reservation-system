@@ -5,7 +5,9 @@ from typing import Any
 import httpx
 
 from system_test.core.clients.commons.http_test_client import HttpTestClient
-from system_test.core.clients.system.api.dtos.reservation_response import ReservationResponse
+from system_test.core.clients.system.api.dtos.reservation_response import (
+    ReservationResponse,
+)
 
 
 class ReservationController:
@@ -99,13 +101,19 @@ class ReservationController:
         self.http_client.assert_ok(response)
         return self.http_client.read_body(response)
 
-    def assert_reservation_cancelled_successfully(self, response: httpx.Response) -> None:
+    def assert_reservation_cancelled_successfully(
+        self, response: httpx.Response
+    ) -> None:
         """Assert reservation was cancelled"""
         self.http_client.assert_ok(response)
 
     def assert_reservation_deleted_successfully(self, response: httpx.Response) -> None:
         """Assert reservation was deleted"""
         self.http_client.assert_no_content(response)
+
+    def assert_unauthenticated_access_denied(self, response: httpx.Response) -> None:
+        """Assert access is denied for unauthenticated requests"""
+        self.http_client.assert_unauthorized(response)
 
     # Helper methods
     def get_error_message(self, response: httpx.Response) -> str:

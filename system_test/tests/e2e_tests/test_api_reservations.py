@@ -79,7 +79,7 @@ def test_should_get_reservation(authenticated_api_client: CarChargingReservation
 
     # Get current authenticated user
     user_response = authenticated_api_client.auth().get_current_user()
-    user = authenticated_api_client.auth().assert_current_user_retrieved(user_response)
+    user = authenticated_api_client.auth().assert_current_user_retrieved_successfully(user_response)
     user_id = user["id"]
 
     # Create a car first

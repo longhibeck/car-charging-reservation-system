@@ -108,6 +108,10 @@ class CarController:
         """Assert car was deleted"""
         self.http_client.assert_no_content(response)
 
+    def assert_unauthenticated_access_denied(self, response: httpx.Response) -> None:
+        """Assert access is denied for unauthenticated requests"""
+        self.http_client.assert_unauthorized(response)
+
     # Helper methods
     def get_error_message(self, response: httpx.Response) -> str:
         """Extract error message from failed response"""
