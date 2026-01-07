@@ -114,7 +114,7 @@ jobs:
 
     - name: Run E2E Tests
       working-directory: system_test
-      run: uv run pytest tests/e2e-tests/ -v --tb=short
+      run: uv run pytest tests/e2e_tests/ -v --tb=short
       shell: bash
       env:
         UV_PROJECT_ENVIRONMENT: .venv-ci

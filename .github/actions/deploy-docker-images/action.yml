@@ -77,7 +77,7 @@ runs:
         UV_PROJECT_ENVIRONMENT: .venv-ci
         
     - name: Run Smoke Tests
-      run: uv run pytest tests/smoke-tests/ -v --tb=short
+      run: uv run pytest tests/smoke_tests/ -v --tb=short
       shell: bash
       working-directory: system_test
       env:
