@@ -98,7 +98,7 @@ jobs:
       env:
         UV_PROJECT_ENVIRONMENT: .venv-ci
     
-    - name: Install Playwright Browser
+    - name: Install Playwright Browsers
       working-directory: system_test
       run: uv run playwright install
       env:

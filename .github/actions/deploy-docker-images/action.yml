@@ -75,6 +75,13 @@ runs:
       working-directory: system_test
       env:
         UV_PROJECT_ENVIRONMENT: .venv-ci
+    
+    - name: Install Playwright Browsers
+      run: uv run playwright install --with-deps chromium
+      shell: bash
+      working-directory: system_test
+      env:
+        UV_PROJECT_ENVIRONMENT: .venv-ci
         
     - name: Run Smoke Tests
       run: uv run pytest tests/smoke_tests/ -v --tb=short
