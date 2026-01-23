@@ -50,9 +50,11 @@ class HttpTestUtils:
                 for error in problem_details["errors"]:
                     error_messages.append(error.message)
 
-            if not error_messages:
+            if len(error_messages)>0:
                 return Result.failure(error_messages)
+            
+        return Result.failure(f"HTTP {response.status_code}: {response.text}")
 
     @staticmethod
     def _is_problem_details(data: Any) -> bool:
-        return data and (data.type or data.title or data.detail or data.errors)
+        return data and (data.get("type") or data.get("title") or data.get("detail") or data.get("errors"))

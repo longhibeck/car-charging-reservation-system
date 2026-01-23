@@ -1,32 +1,23 @@
-from system_test.core.clients.client_factory import ClientFactory
-from playwright.sync_api import Page
 import pytest
+from playwright.sync_api import Page
+from system_test.core.drivers.driver_factory import DriverFactory
 
 
 @pytest.fixture
-def car_charging_reservation_ui_client(page: Page):
-    return ClientFactory.create_car_charging_reservation_ui_client(page)
+def system_api_driver():
+    return DriverFactory.create_system_api_driver()
 
 
 @pytest.fixture
-def car_charging_reservation_api_client():
-    """Fixture that provides an authenticated API client for smoke tests"""
-    return ClientFactory.create_car_charging_reservation_api_client()
-
+def system_ui_driver(page: Page):
+    return DriverFactory.create_system_ui_driver(page)
 
 @pytest.fixture
-def authenticated_api_client(car_charging_reservation_api_client):
-    """Fixture that provides an authenticated API client for smoke tests"""
-
-    # Login to get auth token
-    login_response = car_charging_reservation_api_client.auth().login(
-        "addisonw", "addisonwpass"
-    )
-    login_data = car_charging_reservation_api_client.auth().assert_login_successful(
-        login_response
-    )
-
-    # Set auth token for subsequent requests
-    car_charging_reservation_api_client.set_auth_token(login_data["access_token"])
-
-    return car_charging_reservation_api_client
+def authenticated_api_driver(system_api_driver):
+    """Fixture that provides an authenticated API driver"""
+    from system_test.core.matchers.result_matchers import to_be_success
+    
+    result = system_api_driver.login("addisonw", "addisonwpass")
+    to_be_success(result)  # Driver is now auto-authenticated
+    
+    return system_api_driver

@@ -1,5 +1,5 @@
 from typing import TypedDict
-from system_test.core.drivers.system.commons.dtos import ConnectorTypeLiteral
+from system_test.core.drivers.system.commons.enums.connector_type import ConnectorTypeLiteral
 
 
 class AddCarResponse(TypedDict):
