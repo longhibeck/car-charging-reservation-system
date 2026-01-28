@@ -1,5 +1,4 @@
 
-import system_test
 from system_test.core.drivers.commons.clients.http_test_client import HttpTestClient
 from system_test.core.drivers.system.reservation_system.api.client.controllers.health_controller import HealthController
 from system_test.core.drivers.system.reservation_system.api.client.controllers.car_controller import CarController

@@ -19,7 +19,7 @@ class Result[T]:
         return Result(True, value=value)
 
     @staticmethod
-    def failure(error_messages: str | list[str]) -> "Result[T]":
+    def failure(error_messages: str | list[str] = []) -> "Result[T]":
         messages = (
             error_messages if isinstance(error_messages, list) else [error_messages]
         )
