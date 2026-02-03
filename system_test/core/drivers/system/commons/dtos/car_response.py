@@ -1,9 +1,10 @@
 from typing import TypedDict
-from system_test.core.drivers.system.commons.enums.connector_type import ConnectorTypeLiteral
+from system_test.core.drivers.system.commons.enums.connector_type import (
+    ConnectorTypeLiteral,
+)
 
 
-class AddCarResponse(TypedDict):
-    """Response DTO for adding a new Car entity"""
+class GetCarResponse(TypedDict):
     id: int
     name: str
     connector_types: list[ConnectorTypeLiteral]
@@ -12,3 +13,6 @@ class AddCarResponse(TypedDict):
     max_kw_ac: int
     max_kw_dc: int
 
+
+class AddCarResponse(GetCarResponse):
+    pass
