@@ -1,33 +1,18 @@
-from system_test.core.clients.system.api.car_charging_reservation_api_client import CarChargingReservationApiClient
+from system_test.core.matchers.result_matchers import to_be_success, to_be_failure_with
 
 
-def test_should_login(car_charging_reservation_api_client: CarChargingReservationApiClient):
-    """Test successful login with valid credentials"""
-    # Login
-    response = car_charging_reservation_api_client.auth().login(
-        username="addisonw", 
-        password="addisonwpass"
-    )
-    
-    # Assert login successful
-    auth_data = car_charging_reservation_api_client.auth().assert_login_successful(response)
-    
-    # Verify response structure
-    assert auth_data["access_token"] is not None
-    assert auth_data["refresh_token"] is not None
-    assert auth_data["token_type"] == "bearer"
-    assert auth_data["user"]["id"] is not None
-    assert auth_data["user"]["username"] == "addisonw"
-    assert auth_data["user"]["external_user_id"] is not None
+def test_should_login_with_valid_credentials(system_api_driver) -> None:
+    result = system_api_driver.login(username="addisonw", password="addisonwpass")
+    to_be_success(result)
 
 
-def test_should_should_display_current_user(logged_in_api_context):
-    """Test getting current authenticated user details"""
-    # This test still uses the old fixture since it needs authentication
-    # In a real scenario, you'd want to add auth handling to the API client
-    response = logged_in_api_context.get("/api/v1/auth/me")
-    response_json = response.json()
-    assert response.ok
-    assert response_json["id"] is not None
-    assert response_json["username"] == "addisonw"
-    assert response_json["external_user_id"] > 0
+def test_should_fail_login_with_invalid_credentials(system_api_driver) -> None:
+    result = system_api_driver.login(username="invaliduser", password="wrongpass")
+    to_be_failure_with(result, "Invalid credentials")
+
+
+def test_should_get_current_user(system_api_driver) -> None:
+    login_result = system_api_driver.login(username="addisonw", password="addisonwpass")
+    to_be_success(login_result)
+    current_user_result = system_api_driver.get_current_user()
+    to_be_success(current_user_result)

@@ -1,8 +1,10 @@
-def test_should_get_home(auth_api_client):
-    response = auth_api_client.home().get_home()
-    auth_api_client.home().assert_get_home_succesful(response)
+from system_test.core.matchers.result_matchers import to_be_success, to_be_failure_with
+
+def test_should_go_to_auth(auth_api_driver):
+    response = auth_api_driver.go_to_auth()
+    to_be_success(response)
 
 
-def test_should_not_login_with_invalid_credentials(auth_api_client):
-    response = auth_api_client.login().post_login("test", "123")
-    auth_api_client.login().assert_login_failed(response)
+def test_should_not_login_with_invalid_credentials(auth_api_driver):
+    response = auth_api_driver.login("test", "123")
+    to_be_failure_with(response, "Invalid credentials")

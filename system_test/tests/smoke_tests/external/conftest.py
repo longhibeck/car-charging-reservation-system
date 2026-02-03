@@ -1,12 +1,12 @@
 import pytest
-from system_test.core.clients.client_factory import ClientFactory
+from system_test.core.drivers.driver_factory import DriverFactory
 
 
 @pytest.fixture()
-def auth_api_client():
-    return ClientFactory.create_auth_api_client()
+def auth_api_driver():
+    return DriverFactory.create_auth_api_driver()
 
 
 @pytest.fixture()
-def charging_points_api_client():
-    return ClientFactory.create_charging_points_api_client()
+def charging_points_api_driver():
+    return DriverFactory.create_charging_points_api_driver()

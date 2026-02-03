@@ -1,8 +1,11 @@
-def test_should_get_home(charging_points_api_client):
-    response = charging_points_api_client.home().get_home()
-    charging_points_api_client.home().assert_get_home_succesful(response)
+from system_test.core.matchers.result_matchers import to_be_success
+
+def test_should_check_health_successfully(charging_points_api_driver):
+    response = charging_points_api_driver.go_to_charging_points()
+    to_be_success(response)
 
 
-def test_should_get_charging_points(charging_points_api_client):
-    response = charging_points_api_client.charging_points().get_charging_points()
-    charging_points_api_client.charging_points().assert_get_charging_points_successful(response)
+
+def test_should_list_charging_points_successfully(charging_points_api_driver):
+    response = charging_points_api_driver.list_charging_points()
+    to_be_success(response)
