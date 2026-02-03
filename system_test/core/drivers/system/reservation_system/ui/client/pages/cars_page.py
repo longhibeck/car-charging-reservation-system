@@ -1,12 +1,14 @@
-from typing import TYPE_CHECKING
+from __future__ import annotations
 
+from typing import TYPE_CHECKING
 
 from system_test.core.drivers.commons.clients.page_test_client import PageTestClient
 from system_test.core.drivers.system.reservation_system.ui.client.pages.base_page import (
     BasePage,
 )
 
-from system_test.core.clients.system.ui.pages.add_car_page import AddCarPage
+if TYPE_CHECKING:
+    from system_test.core.drivers.system.reservation_system.ui.client.pages.add_car_page import AddCarPage
 
 
 class CarsPage(BasePage):
@@ -18,10 +20,9 @@ class CarsPage(BasePage):
         super().__init__(page_client)
 
     def click_view_all(self) -> None:
-        self.page_client.click_button(self.VIEW_ALL_BUTTON_NAME)
+        self._page_client.click_button(self.VIEW_ALL_BUTTON_NAME)
 
     def click_add_car(self) -> AddCarPage:
-        from system_test.core.clients.system.ui.pages.add_car_page import AddCarPage
-
-        self.page_client.click_button(self.ADD_CAR_BUTTON_NAME)
-        return AddCarPage(self.page_client)
+        from system_test.core.drivers.system.reservation_system.ui.client.pages.add_car_page import AddCarPage
+        self._page_client.click_button(self.ADD_CAR_BUTTON_NAME)
+        return AddCarPage(self._page_client)

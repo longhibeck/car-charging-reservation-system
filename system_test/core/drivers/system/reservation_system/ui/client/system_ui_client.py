@@ -37,8 +37,8 @@ class SystemUiClient:
         page_content = self._page.content().lower()
         if (
             not page_content
-            and self.HTML_OPENING_TAG not in page_content
-            and self.HTML_CLOSING_TAG not in page_content
+            or self.HTML_OPENING_TAG not in page_content
+            or self.HTML_CLOSING_TAG not in page_content
         ):
             return False
         

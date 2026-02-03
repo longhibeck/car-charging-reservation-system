@@ -12,10 +12,10 @@ class LoginPage(BasePage):
     def __init__(self, page_client: PageTestClient):
         super().__init__(page_client)
 
-    @staticmethod
-    def is_current_page(page_client: PageTestClient) -> bool:
-        return page_client.is_label_visible(LoginPage.USERNAME_LABEL) and \
-               page_client.is_label_visible(LoginPage.PASSWORD_LABEL)
+    def is_current_page(self) -> bool:
+        return self._page_client.is_label_visible(
+            LoginPage.USERNAME_LABEL
+        ) and self._page_client.is_label_visible(LoginPage.PASSWORD_LABEL)
 
     def input_username(self, value: str):
         self._page_client.fill_input_by_label(self.USERNAME_LABEL, value)
@@ -25,12 +25,3 @@ class LoginPage(BasePage):
 
     def click_login(self):
         self._page_client.click_button(name=self.LOGIN_BUTTON_NAME)
-
-    # def login(self, username: str, password: str) -> HomePage:
-    #     from system_test.core.clients.system.ui.pages.home_page import HomePage
-
-    #     self.input_username(username)
-    #     self.input_password(password)
-    #     self.click_login()
-
-    #     return HomePage(self.page_client)

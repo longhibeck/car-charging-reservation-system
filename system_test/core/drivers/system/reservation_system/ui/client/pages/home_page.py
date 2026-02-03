@@ -17,10 +17,9 @@ class HomePage(BasePage):
     def __init__(self, page_client: PageTestClient):
         super().__init__(page_client)
 
-    @staticmethod
-    def is_current_page(page_client: PageTestClient) -> bool:
-        return page_client.is_heading_visible(HomePage.YOUR_RESERVATIONS_HEADING) and \
-               page_client.is_heading_visible(HomePage.YOUR_CARS_HEADING)
+    def is_current_page(self) -> bool:
+        return self._page_client.is_heading_visible(HomePage.YOUR_RESERVATIONS_HEADING) and \
+               self._page_client.is_heading_visible(HomePage.YOUR_CARS_HEADING)
 
     def click_login(self) -> LoginPage:
         self._page_client.click_button(self.LOGIN_BUTTON_NAME)

@@ -22,8 +22,6 @@ def authenticated_api_driver(system_api_driver: SystemApiDriver) -> SystemApiDri
 
 @pytest.fixture
 def authenticated_ui_driver(system_ui_driver: SystemUiDriver) -> SystemUiDriver:
-    result = system_ui_driver.go_to_system()
-    to_be_success(result)
     result = system_ui_driver.login("addisonw", "addisonwpass")
     to_be_success(result)
     return system_ui_driver

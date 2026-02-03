@@ -52,6 +52,29 @@ class PageTestClient:
         except Exception:
             return False
 
+    def get_element_text(self, selector: str) -> str | None:
+        """Get text content from an element by selector"""
+        try:
+            element = self._page.locator(selector)
+            if element.is_visible(timeout=self._timeout_milliseconds):
+                return element.text_content()
+            return None
+        except Exception:
+            return None
+
+    def is_element_visible(self, selector: str) -> bool:
+        """Check if an element is visible by selector"""
+        try:
+            return self._page.locator(selector).is_visible(
+                timeout=self._timeout_milliseconds
+            )
+        except Exception:
+            return False
+
+    def get_validation_message(self, selector: str) -> str:
+        """Get HTML5 validation message from an input element"""
+        return self._page.locator(selector).evaluate("el => el.validationMessage")
+
     def goto(self, path: str = "/"):
         """Navigate to a path relative to base_url"""
         url = f"{self.base_url}{path}"
