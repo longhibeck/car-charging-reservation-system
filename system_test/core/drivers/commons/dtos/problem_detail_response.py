@@ -12,6 +12,6 @@ class ProblemDetailResponse(TypedDict):
     type: NotRequired[str]
     title: NotRequired[str]
     status: NotRequired[int]
-    detail: NotRequired[str]
+    detail: NotRequired[dict[str, Any] | list[str] | str]
     instance: NotRequired[str]
     errors: NotRequired[list[ProblemDetailsFieldErrorResponse]]
