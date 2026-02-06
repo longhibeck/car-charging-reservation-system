@@ -5,12 +5,13 @@ from system_test.core.drivers.external.auth.client.controllers.auth_controller i
 from system_test.core.drivers.external.auth.client.controllers.health_controller import (
     HealthController,
 )
+from httpx import Client
 
 
 class AuthApiClient:
-    def __init__(self, http_client, base_url) -> None:
-        self._http_client = http_client
-        self._test_http_client = HttpTestClient(http_client, base_url)
+    def __init__(self, base_url: str) -> None:
+        self._http_client = Client(base_url=base_url, headers={"Content-Type": "application/json"})
+        self._test_http_client = HttpTestClient(self._http_client, base_url)
         self.health_controller = HealthController(self._test_http_client)
         self.auth_controller = AuthController(self._test_http_client)
 

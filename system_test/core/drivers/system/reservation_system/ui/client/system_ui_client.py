@@ -1,9 +1,7 @@
-from system_test.core.drivers.system.reservation_system.ui.client.pages.home_page import (
-    HomePage,
-)
-from playwright.sync_api import Page, Response
+from playwright.sync_api import Page, Response, Browser, BrowserContext, sync_playwright
 from system_test.core.drivers.commons.clients.page_test_client import PageTestClient
 from http import HTTPStatus
+from typing import Optional
 
 
 class SystemUiClient:
@@ -11,12 +9,27 @@ class SystemUiClient:
     TEXT_HTML = "text/html"
     HTML_OPENING_TAG = "<html"
     HTML_CLOSING_TAG = "</html>"
+    
+    _playwright_instance = None
+    _browser: Optional[Browser] = None
+    _context: Optional[BrowserContext] = None
+    _shared_page: Optional[Page] = None
 
-    def __init__(self, page: Page, base_url: str) -> None:
-        self._page = page
+    def __init__(self, base_url: str) -> None:
         self._base_url = base_url
         self._home_page = None  # as HomePage
         self._response: Response | None = None
+        self._page = self._get_or_create_page()
+    
+    @classmethod
+    def _get_or_create_page(cls) -> Page:
+        """Create or return existing Playwright page instance."""
+        if cls._shared_page is None:
+            cls._playwright_instance = sync_playwright().start()
+            cls._browser = cls._playwright_instance.chromium.launch(headless=True)
+            cls._context = cls._browser.new_context()
+            cls._shared_page = cls._context.new_page()
+        return cls._shared_page
 
     def navigate_to_base(self) -> PageTestClient:
         self._response = self._page.goto(self._base_url)

@@ -1,14 +1,10 @@
-from system_test.core.drivers.commons.clients.http_client_factory import (
-    HttpClientFactory,
-)
 from system_test.core.drivers.external.auth.client.auth_api_client import AuthApiClient
 
 
 class AuthApiDriver:
     def __init__(self, base_url) -> None:
         self.base_url = base_url
-        self._http_client = HttpClientFactory.create(base_url)
-        self._api_client = AuthApiClient(self._http_client, base_url)
+        self._api_client = AuthApiClient(base_url)
 
     def go_to_auth(self):
         return self._api_client.health().check_health()

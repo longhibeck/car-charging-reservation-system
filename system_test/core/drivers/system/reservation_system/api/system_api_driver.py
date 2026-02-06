@@ -1,8 +1,5 @@
 from system_test.core.drivers.system.system_driver import SystemDriver
 from system_test.core.drivers.commons.result import Result
-from system_test.core.drivers.commons.clients.http_client_factory import (
-    HttpClientFactory,
-)
 from system_test.core.drivers.system.commons.dtos.car_request import AddCarRequest
 from system_test.core.drivers.system.commons.dtos.car_response import AddCarResponse
 from system_test.core.drivers.system.commons.dtos.reservation_response import ReservationResponse
@@ -11,13 +8,10 @@ from system_test.core.drivers.system.reservation_system.api.client.system_api_cl
     SystemApiClient,
 )
 
-# from httpx import Client
-
 
 class SystemApiDriver(SystemDriver):
     def __init__(self, base_url) -> None:
-        self._http_client = HttpClientFactory.create(base_url)
-        self._client = SystemApiClient(self._http_client, base_url)
+        self._client = SystemApiClient(base_url)
 
     def go_to_system(self) -> None:
         return self._client.health.check_health()
@@ -29,7 +23,7 @@ class SystemApiDriver(SystemDriver):
         # Auto-configure authentication on successful login
         if result.is_success():
             login_response = result.get_value()
-            self._http_client.headers["Authorization"] = f"Bearer {login_response['access_token']}"
+            self._client.set_header("Authorization", f"Bearer {login_response['access_token']}")
         
         return result
     

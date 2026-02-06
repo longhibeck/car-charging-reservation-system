@@ -8,10 +8,13 @@ from httpx import Client
 
 
 class SystemApiClient:
-    def __init__(self, client:Client, base_url:str) -> None:
-        self._http_client = client
-        self._http_test_client = HttpTestClient(client, base_url)
+    def __init__(self, base_url: str) -> None:
+        self._http_client = Client(base_url=base_url, headers={"Content-Type": "application/json"})
+        self._http_test_client = HttpTestClient(self._http_client, base_url)
         self.health = HealthController(self._http_test_client)
         self.car = CarController(self._http_test_client)
         self.auth = AuthController(self._http_test_client)
         self.reservation = ReservationController(self._http_test_client)
+    
+    def set_header(self, key: str, value: str) -> None:
+        self._http_client.headers[key] = value

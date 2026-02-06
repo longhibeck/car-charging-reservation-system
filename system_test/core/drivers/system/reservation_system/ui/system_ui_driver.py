@@ -18,7 +18,6 @@ from system_test.core.drivers.system.reservation_system.ui.client.pages.add_car_
 from system_test.core.drivers.system.commons.dtos.car_response import (
     AddCarResponse,
 )
-from playwright.sync_api import Page
 from enum import StrEnum
 
 
@@ -31,8 +30,8 @@ class Pages(StrEnum):
 
 
 class SystemUiDriver(SystemDriver):
-    def __init__(self, page: Page, base_url: str) -> None:
-        self._client = SystemUiClient(page, base_url)
+    def __init__(self, base_url: str) -> None:
+        self._client = SystemUiClient(base_url)
         self._page_client = None  # NOT HAPPY WITH IT
         self._current_page: Pages = Pages.NONE
         self._home_page: HomePage = None

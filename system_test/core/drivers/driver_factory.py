@@ -1,15 +1,14 @@
 from system_test.core.system_test_configuration import SystemTestConfiguration
 from system_test.core.drivers.system.reservation_system.api.system_api_driver import SystemApiDriver
 from system_test.core.drivers.system.reservation_system.ui.system_ui_driver import SystemUiDriver
-from playwright.sync_api import Page
 from system_test.core.drivers.external.charging_points.charging_points_api_driver import ChargingPointsDriver
 from system_test.core.drivers.external.auth.auth_api_driver import AuthApiDriver
 
 class DriverFactory:
 
     @staticmethod
-    def create_system_ui_driver(page: Page):
-        return SystemUiDriver(page, SystemTestConfiguration.get_system_ui_base_url())
+    def create_system_ui_driver():
+        return SystemUiDriver(SystemTestConfiguration.get_system_ui_base_url())
             
     @staticmethod
     def create_system_api_driver():
