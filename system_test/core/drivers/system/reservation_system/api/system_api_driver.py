@@ -7,11 +7,16 @@ from system_test.core.drivers.system.commons.dtos.auth_request import LoginReque
 from system_test.core.drivers.system.reservation_system.api.client.system_api_client import (
     SystemApiClient,
 )
+from system_test.core.drivers.commons.clients.http_test_client import HttpTestClient
+from system_test.core.drivers.commons.clients.closer import Closer
+from httpx import Client
 
 
 class SystemApiDriver(SystemDriver):
     def __init__(self, base_url) -> None:
-        self._client = SystemApiClient(base_url)
+        self._http_client = Client(base_url=base_url, headers={"Content-Type": "application/json"})
+        self._http_test_client = HttpTestClient(self._http_client, base_url)
+        self._client = SystemApiClient(self._http_test_client)
 
     def go_to_system(self) -> None:
         return self._client.health.check_health()
@@ -23,7 +28,7 @@ class SystemApiDriver(SystemDriver):
         # Auto-configure authentication on successful login
         if result.is_success():
             login_response = result.get_value()
-            self._client.set_header("Authorization", f"Bearer {login_response['access_token']}")
+            self._http_client.headers["Authorization"] = f"Bearer {login_response['access_token']}"
         
         return result
     
@@ -95,3 +100,6 @@ class SystemApiDriver(SystemDriver):
         return self._client.reservation.create_reservation(
             car_id, charging_point_id, start_time, end_time
         )
+    
+    def close(self) -> None:
+        Closer.close(self._http_client)

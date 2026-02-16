@@ -4,17 +4,12 @@ from system_test.core.drivers.system.reservation_system.api.client.controllers.h
 from system_test.core.drivers.system.reservation_system.api.client.controllers.car_controller import CarController
 from system_test.core.drivers.system.reservation_system.api.client.controllers.auth_controller import AuthController
 from system_test.core.drivers.system.reservation_system.api.client.controllers.reservation_controller import ReservationController
-from httpx import Client
 
 
 class SystemApiClient:
-    def __init__(self, base_url: str) -> None:
-        self._http_client = Client(base_url=base_url, headers={"Content-Type": "application/json"})
-        self._http_test_client = HttpTestClient(self._http_client, base_url)
+    def __init__(self, http_test_client: HttpTestClient) -> None:
+        self._http_test_client = http_test_client
         self.health = HealthController(self._http_test_client)
         self.car = CarController(self._http_test_client)
         self.auth = AuthController(self._http_test_client)
         self.reservation = ReservationController(self._http_test_client)
-    
-    def set_header(self, key: str, value: str) -> None:
-        self._http_client.headers[key] = value

@@ -56,3 +56,18 @@ class SystemUiClient:
             return False
         
         return True
+    
+    @classmethod
+    def close(cls) -> None:
+        if cls._shared_page:
+            cls._shared_page.close()
+            cls._shared_page = None
+        if cls._context:
+            cls._context.close()
+            cls._context = None
+        if cls._browser:
+            cls._browser.close()
+            cls._browser = None
+        if cls._playwright_instance:
+            cls._playwright_instance.stop()
+            cls._playwright_instance = None

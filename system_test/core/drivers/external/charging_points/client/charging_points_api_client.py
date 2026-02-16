@@ -5,17 +5,15 @@ from system_test.core.drivers.external.charging_points.client.controllers.chargi
 from system_test.core.drivers.system.reservation_system.api.client.controllers.health_controller import (
     HealthController,
 )
-from httpx import Client
 
 
 class ChargingPointsApiClient:
-    def __init__(self, base_url: str) -> None:
-        self._http_client = Client(base_url=base_url, headers={"Content-Type": "application/json"})
-        self._test_http_client = HttpTestClient(self._http_client, base_url)
+    def __init__(self, http_test_client: HttpTestClient) -> None:
+        self._http_test_client = http_test_client
         self.charging_points_controller = ChargingPointsController(
-            self._test_http_client
+            self._http_test_client
         )
-        self.health_controller = HealthController(self._test_http_client)
+        self.health_controller = HealthController(self._http_test_client)
 
     def charging_points(self) -> ChargingPointsController:
         return self.charging_points_controller

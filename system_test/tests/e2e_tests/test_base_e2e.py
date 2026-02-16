@@ -29,6 +29,9 @@ class BaseE2eTest(ABC):
             DriverFactory.create_charging_points_api_driver()
         )
         self.auth_api_driver = DriverFactory.create_auth_api_driver()
+        yield
+        self.system_driver.close()
+        self.charging_points_api_driver.close()
 
     def test_should_login(self):
         result = self.system_driver.login("addisonw", "addisonwpass")

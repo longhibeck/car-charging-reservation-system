@@ -19,6 +19,7 @@ from system_test.core.drivers.system.commons.dtos.car_response import (
     AddCarResponse,
 )
 from enum import StrEnum
+from system_test.core.drivers.commons.clients.closer import Closer
 
 
 class Pages(StrEnum):
@@ -153,3 +154,6 @@ class SystemUiDriver(SystemDriver):
             self._current_page = Pages.HOME
         else:
             self._current_page = Pages.NONE
+
+    def close(self):
+        Closer.close(self._client)
