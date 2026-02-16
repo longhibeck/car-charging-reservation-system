@@ -1,11 +1,14 @@
-from system_test.core.matchers.result_matchers import to_be_success
-
-def test_should_check_health_successfully(charging_points_api_driver):
-    response = charging_points_api_driver.go_to_charging_points()
-    to_be_success(response)
+from system_test.core.drivers.driver_factory import DriverFactory
+from system_test.core.drivers.commons.result_assert import ResultAssert
 
 
+class TestChargingPointsApiSmoke:
+    driver = DriverFactory.create_charging_points_api_driver()
 
-def test_should_list_charging_points_successfully(charging_points_api_driver):
-    response = charging_points_api_driver.list_charging_points()
-    to_be_success(response)
+    def test_should_go_to_charging_points(self):
+        result = self.driver.go_to_charging_points()
+        ResultAssert.assert_that_result(result).is_success()
+
+    def test_should_list_charging_points_successfully(self):
+        result = self.driver.list_charging_points()
+        ResultAssert.assert_that_result(result).is_success()

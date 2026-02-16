@@ -1,10 +1,14 @@
-from system_test.core.matchers.result_matchers import to_be_success, to_be_failure_with
-
-def test_should_go_to_auth(auth_api_driver):
-    response = auth_api_driver.go_to_auth()
-    to_be_success(response)
+from system_test.core.drivers.commons.result_assert import ResultAssert
+from system_test.core.drivers.driver_factory import DriverFactory
 
 
-def test_should_not_login_with_invalid_credentials(auth_api_driver):
-    response = auth_api_driver.login("test", "123")
-    to_be_failure_with(response, "Invalid credentials")
+class TestAuthApiSmoke:
+    driver = DriverFactory.create_auth_api_driver()
+
+    def test_should_go_to_auth(self):
+        result = self.driver.go_to_auth()
+        ResultAssert.assert_that_result(result).is_success()
+
+    def test_should_not_login_with_invalid_credentials(self):
+        result = self.driver.login("test", "123")
+        ResultAssert.assert_that_result(result).is_failure("Invalid credentials")
