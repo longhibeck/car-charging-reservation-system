@@ -53,7 +53,12 @@ class SystemUiDriver(SystemDriver):
         self._login_page.input_username(username)
         self._login_page.input_password(password)
         self._login_page.click_login()
+        
+        # Wait for navigation or error message to appear
         self._page_client.get_page().wait_for_load_state("networkidle")
+        
+        # Small additional wait to ensure error messages are rendered
+        self._page_client.get_page().wait_for_timeout(500)
 
         self._detect_current_page()
 
@@ -94,8 +99,17 @@ class SystemUiDriver(SystemDriver):
                 self._add_car_page.check_connector_schuko()
 
         self._cars_page = self._add_car_page.click_add_car()
+        
+        # Wait for navigation or error message to appear
+        self._page_client.get_page().wait_for_load_state("networkidle")
+        self._page_client.get_page().wait_for_timeout(500)
+        
+        # Check if we're still on the Add Car page (form validation failed)
+        if self._page_client.is_heading_visible(self._add_car_page.PAGE_TITLE):
+            error_message = self._add_car_page.get_error_message()
+            return Result.failure(error_message if error_message else "Failed to add car")
+        
         self._current_page = Pages.CARS
-
         return Result.success()
 
     def list_cars(self) -> Result[list]:

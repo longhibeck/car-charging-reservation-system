@@ -65,6 +65,9 @@ class HttpTestUtils:
             if len(error_messages) > 0:
                 return Result.failure(error_messages)
 
+        if isinstance(data, dict) and "message" in data:
+            return Result.failure(data["message"])
+
         return Result.failure(f"HTTP {response.status_code}: {response.text}")
 
     @staticmethod
