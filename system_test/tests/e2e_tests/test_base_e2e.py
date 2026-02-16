@@ -32,6 +32,7 @@ class BaseE2eTest(ABC):
         yield
         self.system_driver.close()
         self.charging_points_api_driver.close()
+        self.auth_api_driver.close()
 
     def test_should_login(self):
         result = self.system_driver.login("addisonw", "addisonwpass")

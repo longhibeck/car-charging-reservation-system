@@ -8,5 +8,7 @@ class BaseSmokeTest(ABC):
     def create_driver(self): ...
 
     @pytest.fixture(autouse=True)
-    def setup_driver(self):
+    def setup(self):
         self.driver = self.create_driver()
+        yield
+        self.driver.close()
