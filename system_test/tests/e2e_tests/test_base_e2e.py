@@ -9,7 +9,7 @@ def login_as(username: str = "addisonw", password: str = "addisonwpass"):
     def decorator(func):
         @wraps(func)
         def wrapper(self, *args, **kwargs):
-            result = self.driver.login(username, password)
+            result = self.system_driver.login(username, password)
             ResultAssert.assert_that_result(result).is_success()
             return func(self, *args, **kwargs)
 
@@ -34,20 +34,16 @@ class BaseE2eTest(ABC):
         self.charging_points_api_driver.close()
         self.auth_api_driver.close()
 
-    def test_should_login(self):
+    def test_should_login(self) -> None:
         result = self.system_driver.login("addisonw", "addisonwpass")
         ResultAssert.assert_that_result(result).is_success()
 
-    def test_should_not_login_with_invalid_credentials(self):
+    def test_should_not_login_with_invalid_credentials(self) -> None:
         result = self.system_driver.login("invalid_user", "invalid_pass")
         ResultAssert.assert_that_result(result).is_failure("Invalid credentials")
 
-    def test_should_add_car(self):
-        auth_result = self.system_driver.login(
-            username="addisonw", password="addisonwpass"
-        )
-        ResultAssert.assert_that_result(auth_result).is_success()
-
+    @login_as()
+    def test_should_add_car(self) -> None:
         add_car_result = self.system_driver.add_car(
             name="BYD Seal U",
             connector_types=["CCS"],
@@ -66,11 +62,8 @@ class BaseE2eTest(ABC):
             (["Type 2", "CCS", "Schuko"]),
         ],
     )
-    def test_should_add_car_with_multiple_valid_connector_types(self, connector_types):
-        auth_result = self.system_driver.login(
-            username="addisonw", password="addisonwpass"
-        )
-        ResultAssert.assert_that_result(auth_result).is_success()
+    @login_as()
+    def test_should_add_car_with_multiple_valid_connector_types(self, connector_types) -> None:
         add_car_result = self.system_driver.add_car(
             name="BYD Seal U",
             connector_types=connector_types,
@@ -81,22 +74,16 @@ class BaseE2eTest(ABC):
         )
         ResultAssert.assert_that_result(add_car_result).is_success()
 
-    def test_should_list_cars(self):
-        auth_result = self.system_driver.login(
-            username="addisonw", password="addisonwpass"
-        )
-        ResultAssert.assert_that_result(auth_result).is_success()
+    @login_as()
+    def test_should_list_cars(self) -> None:
         list_cars_result = self.system_driver.list_cars()
         ResultAssert.assert_that_result(list_cars_result).is_success()
 
     @pytest.mark.parametrize("value", (0, -10, -20))
+    @login_as()
     def test_should_not_create_car_with_zero_or_negative_battery_charge_limit(
         self, value
-    ):
-        auth_result = self.system_driver.login(
-            username="addisonw", password="addisonwpass"
-        )
-        ResultAssert.assert_that_result(auth_result).is_success()
+    ) -> None:
         add_car_result = self.system_driver.add_car(
             name="Invalid Car",
             connector_types=["CCS"],
@@ -110,11 +97,8 @@ class BaseE2eTest(ABC):
         )
 
     @pytest.mark.parametrize("value", (101, 200, 150))
-    def test_should_not_create_car_with_over_hundred_battery_charge_limit(self, value):
-        auth_result = self.system_driver.login(
-            username="addisonw", password="addisonwpass"
-        )
-        ResultAssert.assert_that_result(auth_result).is_success()
+    @login_as()
+    def test_should_not_create_car_with_over_hundred_battery_charge_limit(self, value) -> None:
         add_car_result = self.system_driver.add_car(
             name="Invalid Car",
             connector_types=["CCS"],

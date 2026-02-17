@@ -1,4 +1,4 @@
-from system_test.tests.e2e_tests.test_base_e2e import BaseE2eTest
+from system_test.tests.e2e_tests.test_base_e2e import BaseE2eTest, login_as
 from system_test.core.drivers.driver_factory import DriverFactory
 from system_test.core.drivers.commons.result_assert import ResultAssert
 from system_test.core.drivers.commons.utils.datetime_utils import DateTimeUtils
@@ -9,19 +9,13 @@ class TestApiE2e(BaseE2eTest):
     def create_system_driver(self):
         return DriverFactory.create_system_api_driver()
 
-    def test_should_get_current_user(self):
-        login_result = self.system_driver.login(
-            username="addisonw", password="addisonwpass"
-        )
-        ResultAssert.assert_that_result(login_result).is_success()
+    @login_as()
+    def test_should_get_current_user(self) -> None:
         current_user_result = self.system_driver.get_current_user()
         ResultAssert.assert_that_result(current_user_result).is_success()
 
-    def test_should_not_add_car_with_invalid_data_type(self):
-        auth_result = self.system_driver.login(
-            username="addisonw", password="addisonwpass"
-        )
-        ResultAssert.assert_that_result(auth_result).is_success()
+    @login_as()
+    def test_should_not_add_car_with_invalid_data_type(self) -> None:
         add_car_result = self.system_driver.add_car(
             name="Invalid Car",
             connector_types=["CCS"],
@@ -34,13 +28,10 @@ class TestApiE2e(BaseE2eTest):
             "Input should be a valid integer, unable to parse string as an integer"
         )
 
+    @login_as()
     def test_should_update_car_successfully(
         self,
-    ):
-        auth_result = self.system_driver.login(
-            username="addisonw", password="addisonwpass"
-        )
-        ResultAssert.assert_that_result(auth_result).is_success()
+    ) -> None:
         add_car_result = self.system_driver.add_car(
             name="Tesla Model 3",
             connector_types=["CCS"],
@@ -64,13 +55,10 @@ class TestApiE2e(BaseE2eTest):
         )
         ResultAssert.assert_that_result(update_result).is_success()
 
+    @login_as()
     def test_should_delete_car_successfully(
         self,
-    ):
-        auth_result = self.system_driver.login(
-            username="addisonw", password="addisonwpass"
-        )
-        ResultAssert.assert_that_result(auth_result).is_success()
+    ) -> None:
         add_car_result = self.system_driver.add_car(
             name="Nissan Leaf",
             connector_types=["CHAdeMO"],
@@ -86,25 +74,20 @@ class TestApiE2e(BaseE2eTest):
         delete_result = self.system_driver.delete_car(car_id=car_id)
         ResultAssert.assert_that_result(delete_result).is_success()
 
+    @login_as()
     def test_should_list_reservations(self) -> None:
-        login_result = self.system_driver.login(
-            username="addisonw", password="addisonwpass"
-        )
-        ResultAssert.assert_that_result(login_result).is_success()
+        list_reservations_result = self.system_driver.list_reservations()
+        ResultAssert.assert_that_result(list_reservations_result).is_success()
         list_reservations_result = self.system_driver.list_reservations()
         ResultAssert.assert_that_result(list_reservations_result).is_success()
 
+    @login_as()
     def test_should_not_create_reservation_with_not_existent_car(
         self,
     ) -> None:
         now = DateTimeUtils.get_current_zulu_time()
         start_time = DateTimeUtils.add_hours_to_zulu_time(now, 1)
         end_time = DateTimeUtils.add_hours_to_zulu_time(start_time, 4)
-
-        login_result = self.system_driver.login(
-            username="addisonw", password="addisonwpass"
-        )
-        ResultAssert.assert_that_result(login_result).is_success()
 
         add_reservation_result = self.system_driver.create_reservation(
             car_id=str(uuid4()),
@@ -116,13 +99,10 @@ class TestApiE2e(BaseE2eTest):
             "Car not found"
         )
 
+    @login_as()
     def test_should_not_create_reservation_with_not_existent_charging_point(
         self,
     ) -> None:
-        login_result = self.system_driver.login(
-            username="addisonw", password="addisonwpass"
-        )
-        ResultAssert.assert_that_result(login_result).is_success()
 
         add_car_result = self.system_driver.add_car(
             name="Test Car",
@@ -150,13 +130,10 @@ class TestApiE2e(BaseE2eTest):
             "Charging point is not available during the requested time. Charging point not found"
         )
 
+    @login_as()
     def test_should_create_reservation_successfully(
         self,
     ) -> None:
-        login_result = self.system_driver.login(
-            username="addisonw", password="addisonwpass"
-        )
-        ResultAssert.assert_that_result(login_result).is_success()
         add_car_result = self.system_driver.add_car(
             name="Test Car",
             connector_types=["CCS"],
@@ -181,13 +158,10 @@ class TestApiE2e(BaseE2eTest):
         )
         ResultAssert.assert_that_result(add_reservation_result).is_success()
 
+    @login_as()
     def test_should_get_reservation_successfully(
         self,
     ) -> None:
-        login_result = self.system_driver.login(
-            username="addisonw", password="addisonwpass"
-        )
-        ResultAssert.assert_that_result(login_result).is_success()
         add_car_result = self.system_driver.add_car(
             name="Test Car",
             connector_types=["CCS"],
