@@ -52,8 +52,12 @@ class SystemTestConfiguration:
                     )
                 ),
                 car_charging_reservation=CarChargingReservationConfig(
-                    api=ApiConfig(os.getenv("CAR_CHARGING_RESERVATION_API_BASE_URL", "http://localhost:8080")),
-                    ui=UiConfig(os.getenv("CAR_CHARGING_RESERVATION_UI_BASE_URL", "http://localhost:8080/api/v1")),
+                    api=ApiConfig(
+                        os.getenv("SYSTEM_API_BASE_URL", "http://localhost:8080")
+                    ),
+                    ui=UiConfig(
+                        os.getenv("SYSTEM_UI_BASE_URL", "http://localhost:8080")
+                    ),
                 ),
             )
         return cls._config
@@ -63,13 +67,13 @@ class SystemTestConfiguration:
         return cls.load_config().auth.api.base_url
 
     @classmethod
-    def get_charging_points_base_url(cls):
+    def get_charging_points_api_base_url(cls):
         return cls.load_config().charging_points.api.base_url
 
     @classmethod
-    def get_car_charging_reservation_api_base_url(cls):
+    def get_system_api_base_url(cls):
         return cls.load_config().car_charging_reservation.api.base_url
-    
+
     @classmethod
-    def get_car_charging_reservation_ui_base_url(cls):
-        return cls.load_config().car_charging_reservation.api.base_url
+    def get_system_ui_base_url(cls):
+        return cls.load_config().car_charging_reservation.ui.base_url

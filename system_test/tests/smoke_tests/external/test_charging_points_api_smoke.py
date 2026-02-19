@@ -1,8 +1,14 @@
-def test_should_get_home(charging_points_api_client):
-    response = charging_points_api_client.home().get_home()
-    charging_points_api_client.home().assert_get_home_succesful(response)
+from system_test.core.drivers.driver_factory import DriverFactory
+from system_test.core.drivers.commons.result_assert import ResultAssert
 
 
-def test_should_get_charging_points(charging_points_api_client):
-    response = charging_points_api_client.charging_points().get_charging_points()
-    charging_points_api_client.charging_points().assert_get_charging_points_successful(response)
+class TestChargingPointsApiSmoke:
+    driver = DriverFactory.create_charging_points_api_driver()
+
+    def test_should_go_to_charging_points(self):
+        result = self.driver.go_to_charging_points()
+        ResultAssert.assert_that_result(result).is_success()
+
+    def test_should_list_charging_points_successfully(self):
+        result = self.driver.list_charging_points()
+        ResultAssert.assert_that_result(result).is_success()

@@ -1,0 +1,88 @@
+from typing import TypeVar, Any
+from http import HTTPStatus
+from system_test.core.drivers.commons.result import Result
+from system_test.core.drivers.commons.clients.typed_response import TypedResponse
+from system_test.core.drivers.commons.dtos.problem_detail_response import (
+    ProblemDetailResponse,
+)
+
+T = TypeVar("T")
+
+
+class HttpTestUtils:
+    @staticmethod
+    def get_ok_result_or_failure(response: TypedResponse[T]) -> Result[T]:
+        return HttpTestUtils._get_result_or_failure(response, HTTPStatus.OK, True)
+
+    @staticmethod
+    def get_created_result_or_failure(response: TypedResponse[T]) -> Result[T]:
+        return HttpTestUtils._get_result_or_failure(response, HTTPStatus.CREATED, True)
+
+    @staticmethod
+    def get_no_content_result_or_failure(response: TypedResponse[T]) -> Result[None]:
+        return HttpTestUtils._get_result_or_failure(
+            response, HTTPStatus.NO_CONTENT, False
+        )
+
+    @staticmethod
+    def _get_result_or_failure(
+        response: TypedResponse[T], status_code: HTTPStatus, has_data: bool
+    ) -> Result[T]:
+        if response.status_code == status_code:
+            if has_data:
+                return Result.success(response.json())
+            return Result.success()
+        return HttpTestUtils.extract_error_messages(response)
+
+    @staticmethod
+    def extract_error_messages(response: TypedResponse[Any]) -> Result[T]:
+        data = response.json()
+
+        if HttpTestUtils._is_problem_details(data):
+            problem_details = ProblemDetailResponse(data)
+            error_messages = []
+
+            if problem_details.get("detail"):
+                detail = problem_details["detail"]
+                if isinstance(detail, list):
+                    for d in detail:
+                        if isinstance(d, dict) and "message" in d:
+                            error_messages.append(d["message"])
+                        if isinstance(d, dict) and "msg" in d:
+                            error_messages.append(d["msg"])
+                else:
+                    error_messages.append(detail)
+
+            if problem_details.get("title") and problem_details.get(
+                "title"
+            ) != problem_details.get("detail"):
+                error_messages.append(f"Title: {problem_details['title']}")
+
+            if problem_details.get("errors") and len(problem_details.get("errors")) > 0:
+                for error in problem_details["errors"]:
+                    error_messages.append(error["message"])
+
+            if len(error_messages) > 0:
+                return Result.failure(error_messages)
+
+        if isinstance(data, dict) and "message" in data:
+            return Result.failure(data["message"])
+
+        return Result.failure(f"HTTP {response.status_code}: {response.text}")
+
+    @staticmethod
+    def _is_problem_details(data: Any) -> bool:
+        return data and (
+            data.get("type")
+            or data.get("title")
+            or data.get("detail")
+            or data.get("errors")
+        )
+
+    @staticmethod
+    def _is_pydantic_validation_error(data: Any) -> bool:
+        return data and (data.get("msg") and data.get("type") and data.get("input"))
+
+    # @staticmethod
+    # def _is_custom_error(data: Any) -> bool:
+    #     return data and data.get("message")

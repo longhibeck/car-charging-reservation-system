@@ -1,8 +1,14 @@
-def test_should_get_home(auth_api_client):
-    response = auth_api_client.home().get_home()
-    auth_api_client.home().assert_get_home_succesful(response)
+from system_test.core.drivers.commons.result_assert import ResultAssert
+from system_test.core.drivers.driver_factory import DriverFactory
 
 
-def test_should_not_login_with_invalid_credentials(auth_api_client):
-    response = auth_api_client.login().post_login("test", "123")
-    auth_api_client.login().assert_login_failed(response)
+class TestAuthApiSmoke:
+    driver = DriverFactory.create_auth_api_driver()
+
+    def test_should_go_to_auth(self):
+        result = self.driver.go_to_auth()
+        ResultAssert.assert_that_result(result).is_success()
+
+    def test_should_not_login_with_invalid_credentials(self):
+        result = self.driver.login("test", "123")
+        ResultAssert.assert_that_result(result).is_failure("Invalid credentials")
