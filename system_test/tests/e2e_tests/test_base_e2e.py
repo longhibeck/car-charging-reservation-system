@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 import pytest
 from system_test.core.drivers.commons.result_assert import ResultAssert
 from system_test.core.drivers.driver_factory import DriverFactory
+from system_test.core.drivers.system.commons.dtos.auth_request import LoginRequest
+from system_test.core.drivers.system.commons.dtos.car_request import AddCarRequest
 from functools import wraps
 
 
@@ -9,7 +11,7 @@ def login_as(username: str = "addisonw", password: str = "addisonwpass"):
     def decorator(func):
         @wraps(func)
         def wrapper(self, *args, **kwargs):
-            result = self.system_driver.login(username, password)
+            result = self.system_driver.login(LoginRequest(username=username, password=password))
             ResultAssert.assert_that_result(result).is_success()
             return func(self, *args, **kwargs)
 
@@ -35,22 +37,24 @@ class BaseE2eTest(ABC):
         self.auth_api_driver.close()
 
     def test_should_login(self) -> None:
-        result = self.system_driver.login("addisonw", "addisonwpass")
+        result = self.system_driver.login(LoginRequest(username="addisonw", password="addisonwpass"))
         ResultAssert.assert_that_result(result).is_success()
 
     def test_should_not_login_with_invalid_credentials(self) -> None:
-        result = self.system_driver.login("invalid_user", "invalid_pass")
+        result = self.system_driver.login(LoginRequest(username="invalid_user", password="invalid_pass"))
         ResultAssert.assert_that_result(result).is_failure("Invalid credentials")
 
     @login_as()
     def test_should_add_car(self) -> None:
         add_car_result = self.system_driver.add_car(
-            name="BYD Seal U",
-            connector_types=["CCS"],
-            battery_charge_limit=100,
-            battery_size=87,
-            max_kw_ac=11,
-            max_kw_dc=15,
+            AddCarRequest(
+                name="BYD Seal U",
+                connector_types=["CCS"],
+                battery_charge_limit=100,
+                battery_size=87,
+                max_kw_ac=11,
+                max_kw_dc=15,
+            )
         )
         ResultAssert.assert_that_result(add_car_result).is_success()
 
@@ -65,12 +69,14 @@ class BaseE2eTest(ABC):
     @login_as()
     def test_should_add_car_with_multiple_valid_connector_types(self, connector_types) -> None:
         add_car_result = self.system_driver.add_car(
-            name="BYD Seal U",
-            connector_types=connector_types,
-            battery_charge_limit=100,
-            battery_size=87,
-            max_kw_ac=11,
-            max_kw_dc=15,
+            AddCarRequest(
+                name="BYD Seal U",
+                connector_types=connector_types,
+                battery_charge_limit=100,
+                battery_size=87,
+                max_kw_ac=11,
+                max_kw_dc=15,
+            )
         )
         ResultAssert.assert_that_result(add_car_result).is_success()
 
@@ -85,12 +91,14 @@ class BaseE2eTest(ABC):
         self, value
     ) -> None:
         add_car_result = self.system_driver.add_car(
-            name="Invalid Car",
-            connector_types=["CCS"],
-            battery_charge_limit=value,
-            battery_size=87,
-            max_kw_ac=11,
-            max_kw_dc=15,
+            AddCarRequest(
+                name="Invalid Car",
+                connector_types=["CCS"],
+                battery_charge_limit=value,
+                battery_size=87,
+                max_kw_ac=11,
+                max_kw_dc=15,
+            )
         )
         ResultAssert.assert_that_result(add_car_result).is_failure(
             "Input should be greater than 0"
@@ -100,12 +108,14 @@ class BaseE2eTest(ABC):
     @login_as()
     def test_should_not_create_car_with_over_hundred_battery_charge_limit(self, value) -> None:
         add_car_result = self.system_driver.add_car(
-            name="Invalid Car",
-            connector_types=["CCS"],
-            battery_charge_limit=value,
-            battery_size=87,
-            max_kw_ac=11,
-            max_kw_dc=15,
+            AddCarRequest(
+                name="Invalid Car",
+                connector_types=["CCS"],
+                battery_charge_limit=value,
+                battery_size=87,
+                max_kw_ac=11,
+                max_kw_dc=15,
+            )
         )
         ResultAssert.assert_that_result(add_car_result).is_failure(
             "Input should be less than or equal to 100"

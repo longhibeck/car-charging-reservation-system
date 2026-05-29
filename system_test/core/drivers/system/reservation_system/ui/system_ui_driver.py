@@ -15,6 +15,7 @@ from system_test.core.drivers.system.reservation_system.ui.client.pages.cars_pag
 from system_test.core.drivers.system.reservation_system.ui.client.pages.add_car_page import (
     AddCarPage,
 )
+from system_test.core.drivers.system.commons.dtos.car_request import AddCarRequest
 from system_test.core.drivers.system.commons.dtos.car_response import (
     AddCarResponse,
 )
@@ -49,10 +50,10 @@ class SystemUiDriver(SystemDriver):
         self._detect_current_page()
         return Result.success()
 
-    def login(self, username: str, password: str) -> Result[None]:
+    def login(self, request) -> Result[None]:
         self.ensure_on_login_page()
-        self._login_page.input_username(username)
-        self._login_page.input_password(password)
+        self._login_page.input_username(request["username"])
+        self._login_page.input_password(request["password"])
         self._login_page.click_login()
         
         # Wait for navigation or error message to appear
@@ -71,25 +72,17 @@ class SystemUiDriver(SystemDriver):
 
         return Result.success()
 
-    def add_car(
-        self,
-        name: str,
-        connector_types: list[str],
-        battery_charge_limit: int,
-        battery_size: int,
-        max_kw_ac: int,
-        max_kw_dc: int,
-    ) -> Result[AddCarResponse]:
+    def add_car(self, request: AddCarRequest) -> Result[AddCarResponse]:
         self.ensure_on_cars_page()
         self._add_car_page = self._cars_page.click_add_car()
 
-        self._add_car_page.input_car_name(name)
-        self._add_car_page.input_battery_charge_limit(str(battery_charge_limit))
-        self._add_car_page.input_battery_size(str(battery_size))
-        self._add_car_page.input_max_kw_ac(str(max_kw_ac))
-        self._add_car_page.input_max_kw_dc(str(max_kw_dc))
+        self._add_car_page.input_car_name(request["name"])
+        self._add_car_page.input_battery_charge_limit(str(request["battery_charge_limit"]))
+        self._add_car_page.input_battery_size(str(request["battery_size"]))
+        self._add_car_page.input_max_kw_ac(str(request["max_kw_ac"]))
+        self._add_car_page.input_max_kw_dc(str(request["max_kw_dc"]))
 
-        for connector_type in connector_types:
+        for connector_type in request["connector_types"]:
             if connector_type == "Type 2":
                 self._add_car_page.check_connector_type_2()
             elif connector_type == "CCS":

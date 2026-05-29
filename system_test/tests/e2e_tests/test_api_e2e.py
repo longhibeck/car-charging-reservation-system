@@ -2,6 +2,8 @@ from system_test.tests.e2e_tests.test_base_e2e import BaseE2eTest, login_as
 from system_test.core.drivers.driver_factory import DriverFactory
 from system_test.core.drivers.commons.result_assert import ResultAssert
 from system_test.core.drivers.commons.utils.datetime_utils import DateTimeUtils
+from system_test.core.drivers.system.commons.dtos.car_request import AddCarRequest, UpdateCarRequest
+from system_test.core.drivers.system.commons.dtos.reservation_request import CreateReservationRequest
 from uuid import uuid4
 
 
@@ -17,12 +19,14 @@ class TestApiE2e(BaseE2eTest):
     @login_as()
     def test_should_not_add_car_with_invalid_data_type(self) -> None:
         add_car_result = self.system_driver.add_car(
-            name="Invalid Car",
-            connector_types=["CCS"],
-            battery_charge_limit=100,
-            battery_size="not-a-number",
-            max_kw_ac=11,
-            max_kw_dc=15,
+            AddCarRequest(
+                name="Invalid Car",
+                connector_types=["CCS"],
+                battery_charge_limit=100,
+                battery_size="not-a-number",
+                max_kw_ac=11,
+                max_kw_dc=15,
+            )
         )
         ResultAssert.assert_that_result(add_car_result).is_failure(
             "Input should be a valid integer, unable to parse string as an integer"
@@ -33,25 +37,29 @@ class TestApiE2e(BaseE2eTest):
         self,
     ) -> None:
         add_car_result = self.system_driver.add_car(
-            name="Tesla Model 3",
-            connector_types=["CCS"],
-            battery_charge_limit=90,
-            battery_size=75,
-            max_kw_ac=11,
-            max_kw_dc=250,
+            AddCarRequest(
+                name="Tesla Model 3",
+                connector_types=["CCS"],
+                battery_charge_limit=90,
+                battery_size=75,
+                max_kw_ac=11,
+                max_kw_dc=250,
+            )
         )
         ResultAssert.assert_that_result(add_car_result).is_success()
         car = add_car_result.get_value()
         car_id = car["id"]
 
         update_result = self.system_driver.update_car(
-            car_id=car_id,
-            name="Tesla Model 3 Updated",
-            connector_types=["CCS", "Type 2"],
-            battery_charge_limit=95,
-            battery_size=80,
-            max_kw_ac=22,
-            max_kw_dc=300,
+            car_id,
+            UpdateCarRequest(
+                name="Tesla Model 3 Updated",
+                connector_types=["CCS", "Type 2"],
+                battery_charge_limit=95,
+                battery_size=80,
+                max_kw_ac=22,
+                max_kw_dc=300,
+            ),
         )
         ResultAssert.assert_that_result(update_result).is_success()
 
@@ -60,12 +68,14 @@ class TestApiE2e(BaseE2eTest):
         self,
     ) -> None:
         add_car_result = self.system_driver.add_car(
-            name="Nissan Leaf",
-            connector_types=["CHAdeMO"],
-            battery_charge_limit=80,
-            battery_size=40,
-            max_kw_ac=6,
-            max_kw_dc=50,
+            AddCarRequest(
+                name="Nissan Leaf",
+                connector_types=["CHAdeMO"],
+                battery_charge_limit=80,
+                battery_size=40,
+                max_kw_ac=6,
+                max_kw_dc=50,
+            )
         )
         ResultAssert.assert_that_result(add_car_result).is_success()
         car = add_car_result.get_value()
@@ -90,10 +100,12 @@ class TestApiE2e(BaseE2eTest):
         end_time = DateTimeUtils.add_hours_to_zulu_time(start_time, 4)
 
         add_reservation_result = self.system_driver.create_reservation(
-            car_id=str(uuid4()),
-            charging_point_id=str(uuid4()),
-            start_time=start_time,
-            end_time=end_time,
+            CreateReservationRequest(
+                car_id=str(uuid4()),
+                charging_point_id=str(uuid4()),
+                start_time=start_time,
+                end_time=end_time,
+            )
         )
         ResultAssert.assert_that_result(add_reservation_result).is_failure(
             "Car not found"
@@ -103,14 +115,15 @@ class TestApiE2e(BaseE2eTest):
     def test_should_not_create_reservation_with_not_existent_charging_point(
         self,
     ) -> None:
-
         add_car_result = self.system_driver.add_car(
-            name="Test Car",
-            connector_types=["CCS"],
-            battery_charge_limit=80,
-            battery_size=500,
-            max_kw_ac=22,
-            max_kw_dc=150,
+            AddCarRequest(
+                name="Test Car",
+                connector_types=["CCS"],
+                battery_charge_limit=80,
+                battery_size=500,
+                max_kw_ac=22,
+                max_kw_dc=150,
+            )
         )
         ResultAssert.assert_that_result(add_car_result).is_success()
 
@@ -121,10 +134,12 @@ class TestApiE2e(BaseE2eTest):
         end_time = DateTimeUtils.add_hours_to_zulu_time(start_time, 4)
 
         add_reservation_result = self.system_driver.create_reservation(
-            car_id=car_id,
-            charging_point_id=str(uuid4()),
-            start_time=start_time,
-            end_time=end_time,
+            CreateReservationRequest(
+                car_id=car_id,
+                charging_point_id=str(uuid4()),
+                start_time=start_time,
+                end_time=end_time,
+            )
         )
         ResultAssert.assert_that_result(add_reservation_result).is_failure(
             "Charging point is not available during the requested time. Charging point not found"
@@ -135,12 +150,14 @@ class TestApiE2e(BaseE2eTest):
         self,
     ) -> None:
         add_car_result = self.system_driver.add_car(
-            name="Test Car",
-            connector_types=["CCS"],
-            battery_charge_limit=80,
-            battery_size=500,
-            max_kw_ac=22,
-            max_kw_dc=150,
+            AddCarRequest(
+                name="Test Car",
+                connector_types=["CCS"],
+                battery_charge_limit=80,
+                battery_size=500,
+                max_kw_ac=22,
+                max_kw_dc=150,
+            )
         )
         ResultAssert.assert_that_result(add_car_result).is_success()
 
@@ -151,10 +168,12 @@ class TestApiE2e(BaseE2eTest):
         end_time = DateTimeUtils.add_hours_to_zulu_time(start_time, 4)
 
         add_reservation_result = self.system_driver.create_reservation(
-            car_id=car_id,
-            charging_point_id="550e8400-e29b-41d4-a716-446655440001",
-            start_time=start_time,
-            end_time=end_time,
+            CreateReservationRequest(
+                car_id=car_id,
+                charging_point_id="550e8400-e29b-41d4-a716-446655440001",
+                start_time=start_time,
+                end_time=end_time,
+            )
         )
         ResultAssert.assert_that_result(add_reservation_result).is_success()
 
@@ -163,12 +182,14 @@ class TestApiE2e(BaseE2eTest):
         self,
     ) -> None:
         add_car_result = self.system_driver.add_car(
-            name="Test Car",
-            connector_types=["CCS"],
-            battery_charge_limit=80,
-            battery_size=500,
-            max_kw_ac=22,
-            max_kw_dc=150,
+            AddCarRequest(
+                name="Test Car",
+                connector_types=["CCS"],
+                battery_charge_limit=80,
+                battery_size=500,
+                max_kw_ac=22,
+                max_kw_dc=150,
+            )
         )
         ResultAssert.assert_that_result(add_car_result).is_success()
 
@@ -179,10 +200,12 @@ class TestApiE2e(BaseE2eTest):
         end_time = DateTimeUtils.add_hours_to_zulu_time(start_time, 4)
 
         add_reservation_result = self.system_driver.create_reservation(
-            car_id=car_id,
-            charging_point_id="550e8400-e29b-41d4-a716-446655440001",
-            start_time=start_time,
-            end_time=end_time,
+            CreateReservationRequest(
+                car_id=car_id,
+                charging_point_id="550e8400-e29b-41d4-a716-446655440001",
+                start_time=start_time,
+                end_time=end_time,
+            )
         )
         ResultAssert.assert_that_result(add_reservation_result).is_success()
 
