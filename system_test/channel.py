@@ -1,5 +1,5 @@
 import pytest
-from system_test.core.channel import ChannelType  # re-export for convenience
+from system_test.core.channel_type import ChannelType  # re-export for convenience
 
 
 def channel(*channels: str) -> pytest.MarkDecorator:

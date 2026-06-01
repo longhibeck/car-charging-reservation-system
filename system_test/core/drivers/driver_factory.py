@@ -4,7 +4,7 @@ from system_test.core.drivers.system.reservation_system.ui.system_ui_driver impo
 from system_test.core.drivers.external.charging_points.charging_points_api_driver import ChargingPointsApiDriver
 from system_test.core.drivers.external.auth.auth_api_driver import AuthApiDriver
 from system_test.core.channel_context import ChannelContext
-from system_test.core.channel import ChannelType
+from system_test.core.channel_type import ChannelType
 
 
 class DriverFactory:
