@@ -1,43 +1,45 @@
-"""
-E2E tests for the car charging reservation system.
-
-Mirrors PlaceOrderPositiveTest / PlaceOrderNegativeTest from mod06 in the
-optivem/shop reference implementation: a single test class decorated with
-@channel(API, UI) so that every test method runs once per channel.
-
-The correct driver (API or UI) is resolved automatically from ChannelContext
-inside DriverFactory.create_system_driver_for_current_channel().
-"""
+from functools import wraps
+from uuid import uuid4
 
 import pytest
-from functools import wraps
-from system_test.channel import channel, ChannelType
+
+from system_test.core.channels.channel_decorator import channel
+from system_test.core.channels.channel_type import ChannelType
 from system_test.core.drivers.commons.result_assert import ResultAssert
 from system_test.core.drivers.commons.utils.datetime_utils import DateTimeUtils
 from system_test.core.drivers.driver_factory import DriverFactory
 from system_test.core.drivers.system.commons.dtos.auth_request import LoginRequest
-from system_test.core.drivers.system.commons.dtos.car_request import AddCarRequest, UpdateCarRequest
-from system_test.core.drivers.system.commons.dtos.reservation_request import CreateReservationRequest
-from uuid import uuid4
+from system_test.core.drivers.system.commons.dtos.car_request import (
+    AddCarRequest,
+    UpdateCarRequest,
+)
+from system_test.core.drivers.system.commons.dtos.reservation_request import (
+    CreateReservationRequest,
+)
 
 
 def login_as(username: str = "addisonw", password: str = "addisonwpass"):
     def decorator(func):
         @wraps(func)
         def wrapper(self, *args, **kwargs):
-            result = self.system_driver.login(LoginRequest(username=username, password=password))
+            result = self.system_driver.login(
+                LoginRequest(username=username, password=password)
+            )
             ResultAssert.assert_that_result(result).is_success()
             return func(self, *args, **kwargs)
+
         return wrapper
+
     return decorator
 
 
 class TestE2e:
-
     @pytest.fixture(autouse=True)
     def setup(self):
         self.system_driver = DriverFactory.create_system_driver_for_current_channel()
-        self.charging_points_api_driver = DriverFactory.create_charging_points_api_driver()
+        self.charging_points_api_driver = (
+            DriverFactory.create_charging_points_api_driver()
+        )
         self.auth_api_driver = DriverFactory.create_auth_api_driver()
         yield
         self.system_driver.close()
@@ -50,12 +52,16 @@ class TestE2e:
 
     @channel(ChannelType.API, ChannelType.UI)
     def test_should_login(self) -> None:
-        result = self.system_driver.login(LoginRequest(username="addisonw", password="addisonwpass"))
+        result = self.system_driver.login(
+            LoginRequest(username="addisonw", password="addisonwpass")
+        )
         ResultAssert.assert_that_result(result).is_success()
 
     @channel(ChannelType.API, ChannelType.UI)
     def test_should_not_login_with_invalid_credentials(self) -> None:
-        result = self.system_driver.login(LoginRequest(username="invalid_user", password="invalid_pass"))
+        result = self.system_driver.login(
+            LoginRequest(username="invalid_user", password="invalid_pass")
+        )
         ResultAssert.assert_that_result(result).is_failure("Invalid credentials")
 
     @channel(ChannelType.API)
@@ -99,7 +105,9 @@ class TestE2e:
         ],
     )
     @login_as()
-    def test_should_add_car_with_multiple_valid_connector_types(self, connector_types) -> None:
+    def test_should_add_car_with_multiple_valid_connector_types(
+        self, connector_types
+    ) -> None:
         add_car_result = self.system_driver.add_car(
             AddCarRequest(
                 name="BYD Seal U",
@@ -172,7 +180,7 @@ class TestE2e:
                 name="Invalid Car",
                 connector_types=["CCS"],
                 battery_charge_limit=100,
-                battery_size="not-a-number",
+                battery_size="not-a-number",  # type: ignore[typeddict-item]
                 max_kw_ac=11,
                 max_kw_dc=15,
             )
@@ -184,7 +192,9 @@ class TestE2e:
     @channel(ChannelType.API)
     @pytest.mark.parametrize("value", [0, -10, -20])
     @login_as()
-    def test_should_not_create_car_with_zero_or_negative_battery_charge_limit(self, value) -> None:
+    def test_should_not_create_car_with_zero_or_negative_battery_charge_limit(
+        self, value
+    ) -> None:
         add_car_result = self.system_driver.add_car(
             AddCarRequest(
                 name="Invalid Car",
@@ -202,7 +212,9 @@ class TestE2e:
     @channel(ChannelType.API)
     @pytest.mark.parametrize("value", [101, 200, 150])
     @login_as()
-    def test_should_not_create_car_with_over_hundred_battery_charge_limit(self, value) -> None:
+    def test_should_not_create_car_with_over_hundred_battery_charge_limit(
+        self, value
+    ) -> None:
         add_car_result = self.system_driver.add_car(
             AddCarRequest(
                 name="Invalid Car",
@@ -310,11 +322,15 @@ class TestE2e:
                 end_time=end_time,
             )
         )
-        ResultAssert.assert_that_result(add_reservation_result).is_failure("Car not found")
+        ResultAssert.assert_that_result(add_reservation_result).is_failure(
+            "Car not found"
+        )
 
     @channel(ChannelType.API)
     @login_as()
-    def test_should_not_create_reservation_with_not_existent_charging_point(self) -> None:
+    def test_should_not_create_reservation_with_not_existent_charging_point(
+        self,
+    ) -> None:
         add_car_result = self.system_driver.add_car(
             AddCarRequest(
                 name="Test Car",
