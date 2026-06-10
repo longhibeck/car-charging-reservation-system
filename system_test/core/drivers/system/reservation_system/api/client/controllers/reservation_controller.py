@@ -1,8 +1,16 @@
+from uuid import UUID
+
 from system_test.core.drivers.commons.clients.http_test_client import HttpTestClient
-from system_test.core.drivers.system.commons.dtos.reservation_request import ReservationRequest
-from system_test.core.drivers.system.commons.dtos.reservation_response import ReservationResponse
-from system_test.core.drivers.commons.result import Result
 from system_test.core.drivers.commons.clients.http_test_utils import HttpTestUtils
+from system_test.core.drivers.commons.clients.typed_response import TypedResponse
+from system_test.core.drivers.commons.result import Result
+from system_test.core.drivers.system.commons.dtos.reservation_request import (
+    ReservationRequest,
+)
+from system_test.core.drivers.system.commons.dtos.reservation_response import (
+    ReservationResponse,
+)
+
 
 class ReservationController:
     """Controller for Reservation API endpoints"""
@@ -15,27 +23,33 @@ class ReservationController:
     # Action methods - make API calls
     def create_reservation(
         self,
-        car_id: int,
-        charging_point_id: str,
+        car_id: UUID,
+        charging_point_id: UUID,
         start_time: str,
         end_time: str,
     ) -> Result[ReservationResponse]:
-        request = ReservationRequest(
-            car_id=car_id,
-            charging_point_id=charging_point_id,
-            start_time=start_time,
-            end_time=end_time,
+        # user_id is derived from car owner on the backend side
+        request: ReservationRequest = {
+            "car_id": str(car_id),
+            "charging_point_id": str(charging_point_id),
+            "start_time": start_time,
+            "end_time": end_time,
+        }
+        response: TypedResponse = self._http_client.post(
+            f"{self.RESERVATIONS_PATH}/", request
         )
-        response = self._http_client.post(f"{self.RESERVATIONS_PATH}/", request)
         return HttpTestUtils.get_created_result_or_failure(response)
 
     def list_reservations(self) -> Result[list[ReservationResponse]]:
-        response = self._http_client.get(f"{self.RESERVATIONS_PATH}/")
+        response: TypedResponse = self._http_client.get(f"{self.RESERVATIONS_PATH}/")
         return HttpTestUtils.get_ok_result_or_failure(response)
-    
+
     def get_reservation(self, reservation_id: int) -> Result[ReservationResponse]:
-        response = self._http_client.get(f"{self.RESERVATIONS_PATH}/{reservation_id}")
+        response: TypedResponse = self._http_client.get(
+            f"{self.RESERVATIONS_PATH}/{reservation_id}"
+        )
         return HttpTestUtils.get_ok_result_or_failure(response)
+
     # def update_reservation(
     #     self,
     #     reservation_id: int,

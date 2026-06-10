@@ -1,7 +1,16 @@
 {
-    "python.testing.pytestArgs": [
-        "system_test"
-    ],
-    "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+  "python.languageServer": "Pylance",
+  "python.defaultInterpreterPath": "${workspaceFolder}/system_test/.venv/bin/python",
+  "ruff.enable": true,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "source.fixAll.ruff": "explicit"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  "python.testing.pytestArgs": ["system_test"],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true
 }

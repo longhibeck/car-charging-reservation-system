@@ -77,5 +77,5 @@ class PageTestClient:
 
     def goto(self, path: str = "/"):
         """Navigate to a path relative to base_url"""
-        url = f"{self.base_url}{path}"
-        return self.page.goto(url)
+        url = f"{self.get_base_url()}{path}"
+        return self.get_page().goto(url)
