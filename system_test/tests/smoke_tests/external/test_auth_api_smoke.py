@@ -1,16 +1,25 @@
-from system_test.core.drivers.commons.result_assert import ResultAssert
-from system_test.core.drivers.driver_factory import DriverFactory
-from system_test.core.drivers.external.auth.dtos.login_request import LoginRequest
+import pytest
+
+from system_test.core.use_case_dsl import UseCaseDsl
 
 
 class TestAuthApiSmoke:
-    driver = DriverFactory.create_auth_api_driver()
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        self.app = UseCaseDsl()
+        yield
+        self.app.close()
 
     def test_should_go_to_auth(self):
-        result = self.driver.go_to_auth()
-        ResultAssert.assert_that_result(result).is_success()
+        self.app.auth().go_to_auth().execute().should_succeed()
 
     def test_should_not_login_with_invalid_credentials(self):
-        request = LoginRequest(username="test", password="123")
-        result = self.driver.login(request)
-        ResultAssert.assert_that_result(result).is_failure("Invalid credentials")
+        (
+            self.app.auth()
+            .login()
+            .username("test")
+            .password("123")
+            .execute()
+            .should_fail()
+            .error_message("Invalid credentials")
+        )
