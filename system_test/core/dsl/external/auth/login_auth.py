@@ -1,6 +1,7 @@
 from system_test.core.drivers.external.auth.auth_driver import AuthDriver
 from system_test.core.drivers.external.auth.dtos.login_request import LoginRequest
 from system_test.core.drivers.external.auth.dtos.login_response import LoginResponse
+from system_test.core.dsl.shared.base_use_case import BaseUseCase
 from system_test.core.dsl.shared.response_verification import ResponseVerification
 from system_test.core.dsl.shared.use_case_context import UseCaseContext
 from system_test.core.dsl.shared.use_case_result import UseCaseResult
@@ -20,7 +21,7 @@ class AuthLoginVerification(ResponseVerification[LoginResponse]):
         return self
 
 
-class LoginAuth:
+class LoginAuth(BaseUseCase[AuthDriver, LoginResponse, AuthLoginVerification]):
     """Use case: authenticate against the external auth service.
 
     Example
@@ -30,8 +31,7 @@ class LoginAuth:
     """
 
     def __init__(self, driver: AuthDriver, context: UseCaseContext) -> None:
-        self._driver = driver
-        self._context = context
+        super().__init__(driver, context)
         self._username: str | None = None
         self._password: str | None = None
 

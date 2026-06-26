@@ -1,6 +1,7 @@
 from system_test.core.drivers.system.commons.dtos.car_request import AddCarRequest
 from system_test.core.drivers.system.commons.dtos.car_response import AddCarResponse
 from system_test.core.drivers.system.system_driver import SystemDriver
+from system_test.core.dsl.shared.base_use_case import BaseUseCase
 from system_test.core.dsl.shared.response_verification import ResponseVerification
 from system_test.core.dsl.shared.use_case_context import UseCaseContext
 from system_test.core.dsl.shared.use_case_result import UseCaseResult
@@ -27,7 +28,7 @@ class AddCarVerification(ResponseVerification[AddCarResponse]):
         return self
 
 
-class AddCar:
+class AddCar(BaseUseCase[SystemDriver, AddCarResponse, AddCarVerification]):
     """Use case: add a new car for the current user.
 
     The optional car_id() setter names a result alias under which the
@@ -43,8 +44,7 @@ class AddCar:
     """
 
     def __init__(self, driver: SystemDriver, context: UseCaseContext) -> None:
-        self._driver = driver
-        self._context = context
+        super().__init__(driver, context)
         self._car_id_alias: str | None = None
         self._name: str | None = None
         self._connector_types: list | None = None

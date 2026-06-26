@@ -1,7 +1,7 @@
 from system_test.core.drivers.system.commons.dtos.car_response import AddCarResponse
 from system_test.core.drivers.system.system_driver import SystemDriver
+from system_test.core.dsl.shared.base_use_case import BaseUseCase
 from system_test.core.dsl.shared.response_verification import ResponseVerification
-from system_test.core.dsl.shared.use_case_context import UseCaseContext
 from system_test.core.dsl.shared.use_case_result import UseCaseResult
 
 
@@ -24,17 +24,13 @@ class ListCarsVerification(ResponseVerification[list[AddCarResponse]]):
         return self
 
 
-class ListCars:
+class ListCars(BaseUseCase[SystemDriver, list[AddCarResponse], ListCarsVerification]):
     """Use case: retrieve the list of cars for the current user.
 
     Example
     -------
     app.system().list_cars().execute().should_succeed()
     """
-
-    def __init__(self, driver: SystemDriver, context: UseCaseContext) -> None:
-        self._driver = driver
-        self._context = context
 
     def execute(self) -> UseCaseResult[list[AddCarResponse], ListCarsVerification]:
         result = self._driver.list_cars()

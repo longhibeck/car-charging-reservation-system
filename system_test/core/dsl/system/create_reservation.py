@@ -8,6 +8,7 @@ from system_test.core.drivers.system.commons.enums.reservation_status import (
     ReservationStatusLiteral,
 )
 from system_test.core.drivers.system.system_driver import SystemDriver
+from system_test.core.dsl.shared.base_use_case import BaseUseCase
 from system_test.core.dsl.shared.response_verification import ResponseVerification
 from system_test.core.dsl.shared.use_case_context import UseCaseContext
 from system_test.core.dsl.shared.use_case_result import UseCaseResult
@@ -30,7 +31,9 @@ class CreateReservationVerification(ResponseVerification[ReservationResponse]):
         return self
 
 
-class CreateReservation:
+class CreateReservation(
+    BaseUseCase[SystemDriver, ReservationResponse, CreateReservationVerification]
+):
     """Use case: create a charging reservation.
 
     car_id() and charging_point_id() are resolved via get_result_value(),
@@ -50,8 +53,7 @@ class CreateReservation:
     """
 
     def __init__(self, driver: SystemDriver, context: UseCaseContext) -> None:
-        self._driver = driver
-        self._context = context
+        super().__init__(driver, context)
         self._reservation_id_alias: str | None = None
         self._car_id_alias: str | None = None
         self._charging_point_id_alias: str | None = None

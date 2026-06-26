@@ -1,6 +1,7 @@
 from system_test.core.drivers.system.commons.dtos.auth_request import LoginRequest
 from system_test.core.drivers.system.commons.dtos.auth_response import LoginResponse
 from system_test.core.drivers.system.system_driver import SystemDriver
+from system_test.core.dsl.shared.base_use_case import BaseUseCase
 from system_test.core.dsl.shared.response_verification import ResponseVerification
 from system_test.core.dsl.shared.use_case_context import UseCaseContext
 from system_test.core.dsl.shared.use_case_result import UseCaseResult
@@ -19,7 +20,7 @@ class LoginVerification(ResponseVerification[LoginResponse]):
         return self
 
 
-class Login:
+class Login(BaseUseCase[SystemDriver, LoginResponse, LoginVerification]):
     """Use case: authenticate a user.
 
     Fluent setters mirror the training PlaceOrder pattern so parameters are
@@ -32,8 +33,7 @@ class Login:
     """
 
     def __init__(self, driver: SystemDriver, context: UseCaseContext) -> None:
-        self._driver = driver
-        self._context = context
+        super().__init__(driver, context)
         self._username: str | None = None
         self._password: str | None = None
 

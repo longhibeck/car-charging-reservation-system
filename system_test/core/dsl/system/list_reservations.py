@@ -2,8 +2,8 @@ from system_test.core.drivers.system.commons.dtos.reservation_response import (
     ReservationResponse,
 )
 from system_test.core.drivers.system.system_driver import SystemDriver
+from system_test.core.dsl.shared.base_use_case import BaseUseCase
 from system_test.core.dsl.shared.response_verification import ResponseVerification
-from system_test.core.dsl.shared.use_case_context import UseCaseContext
 from system_test.core.dsl.shared.use_case_result import UseCaseResult
 
 
@@ -28,17 +28,15 @@ class ListReservationsVerification(ResponseVerification[list[ReservationResponse
         return self
 
 
-class ListReservations:
+class ListReservations(
+    BaseUseCase[SystemDriver, list[ReservationResponse], ListReservationsVerification]
+):
     """Use case: retrieve all reservations for the current user.
 
     Example
     -------
     app.system().list_reservations().execute().should_succeed()
     """
-
-    def __init__(self, driver: SystemDriver, context: UseCaseContext) -> None:
-        self._driver = driver
-        self._context = context
 
     def execute(
         self,

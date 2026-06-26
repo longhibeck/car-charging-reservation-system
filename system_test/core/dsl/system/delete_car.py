@@ -1,10 +1,11 @@
 from system_test.core.drivers.system.system_driver import SystemDriver
+from system_test.core.dsl.shared.base_use_case import BaseUseCase
 from system_test.core.dsl.shared.use_case_context import UseCaseContext
 from system_test.core.dsl.shared.use_case_result import UseCaseResult
 from system_test.core.dsl.shared.void_verification import VoidVerification
 
 
-class DeleteCar:
+class DeleteCar(BaseUseCase[SystemDriver, None, VoidVerification]):
     """Use case: delete an existing car.
 
     car_id() resolves from the context result map — pass the same alias
@@ -16,8 +17,7 @@ class DeleteCar:
     """
 
     def __init__(self, driver: SystemDriver, context: UseCaseContext) -> None:
-        self._driver = driver
-        self._context = context
+        super().__init__(driver, context)
         self._car_id_alias: str | None = None
 
     def car_id(self, alias: str) -> "DeleteCar":
