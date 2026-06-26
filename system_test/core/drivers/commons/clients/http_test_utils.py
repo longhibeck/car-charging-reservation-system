@@ -1,31 +1,30 @@
-from typing import TypeVar, Any
 from http import HTTPStatus
-from system_test.core.drivers.commons.result import Result
+from typing import Any
+
 from system_test.core.drivers.commons.clients.typed_response import TypedResponse
 from system_test.core.drivers.commons.dtos.problem_detail_response import (
     ProblemDetailResponse,
 )
-
-T = TypeVar("T")
+from system_test.core.drivers.commons.result import Result
 
 
 class HttpTestUtils:
     @staticmethod
-    def get_ok_result_or_failure(response: TypedResponse[T]) -> Result[T]:
+    def get_ok_result_or_failure[T](response: TypedResponse[T]) -> Result[T]:
         return HttpTestUtils._get_result_or_failure(response, HTTPStatus.OK, True)
 
     @staticmethod
-    def get_created_result_or_failure(response: TypedResponse[T]) -> Result[T]:
+    def get_created_result_or_failure[T](response: TypedResponse[T]) -> Result[T]:
         return HttpTestUtils._get_result_or_failure(response, HTTPStatus.CREATED, True)
 
     @staticmethod
-    def get_no_content_result_or_failure(response: TypedResponse[T]) -> Result[None]:
+    def get_no_content_result_or_failure[T](response: TypedResponse[T]) -> Result[None]:
         return HttpTestUtils._get_result_or_failure(
             response, HTTPStatus.NO_CONTENT, False
         )
 
     @staticmethod
-    def _get_result_or_failure(
+    def _get_result_or_failure[T](
         response: TypedResponse[T], status_code: HTTPStatus, has_data: bool
     ) -> Result[T]:
         if response.status_code == status_code:
@@ -35,7 +34,7 @@ class HttpTestUtils:
         return HttpTestUtils.extract_error_messages(response)
 
     @staticmethod
-    def extract_error_messages(response: TypedResponse[Any]) -> Result[T]:
+    def extract_error_messages[T](response: TypedResponse[Any]) -> Result[T]:
         data = response.json()
 
         if HttpTestUtils._is_problem_details(data):

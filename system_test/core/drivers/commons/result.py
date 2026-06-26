@@ -1,8 +1,3 @@
-from typing import TypeVar
-
-T = TypeVar("T")
-
-
 class Result[T]:
     def __init__(
         self,

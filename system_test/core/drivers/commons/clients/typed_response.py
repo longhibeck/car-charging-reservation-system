@@ -1,7 +1,4 @@
-from typing import TypeVar
 from httpx import Response as HttpxResponse
-
-T = TypeVar("T")
 
 
 class TypedResponse[T]:
