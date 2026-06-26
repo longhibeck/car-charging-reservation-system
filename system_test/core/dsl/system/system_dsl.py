@@ -1,6 +1,7 @@
 from system_test.core.drivers.system.system_driver import SystemDriver
 from system_test.core.dsl.shared.use_case_context import UseCaseContext
 from system_test.core.dsl.system.go_to_system import GoToSystem
+from system_test.core.dsl.system.list_cars import ListCars
 from system_test.core.dsl.system.login import Login
 
 
@@ -24,3 +25,6 @@ class SystemDsl:
 
     def login(self) -> Login:
         return Login(self._driver, self._context)
+
+    def list_cars(self) -> ListCars:
+        return ListCars(self._driver, self._context)
