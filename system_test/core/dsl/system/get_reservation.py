@@ -22,6 +22,26 @@ class GetReservationVerification(ResponseVerification[ReservationResponse]):
         )
         return self
 
+    def has_valid_id(self) -> "GetReservationVerification":
+        assert self._response["id"], (
+            f"Expected a non-empty reservation id but got '{self._response['id']}'"
+        )
+        return self
+
+    def has_car_id(self, alias: str) -> "GetReservationVerification":
+        expected = self._context.expand_aliases(alias)
+        assert str(self._response["car_id"]) == expected, (
+            f"Expected car_id '{expected}' but got '{self._response['car_id']}'"
+        )
+        return self
+
+    def has_charging_point_id(self, alias: str) -> "GetReservationVerification":
+        expected = self._context.expand_aliases(alias)
+        assert str(self._response["charging_point_id"]) == expected, (
+            f"Expected charging_point_id '{expected}' but got '{self._response['charging_point_id']}'"
+        )
+        return self
+
 
 class GetReservation(
     BaseUseCase[SystemDriver, ReservationResponse, GetReservationVerification]

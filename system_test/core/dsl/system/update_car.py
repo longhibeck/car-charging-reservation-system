@@ -23,12 +23,12 @@ class UpdateCar(BaseUseCase[SystemDriver, None, VoidVerification]):
     def __init__(self, driver: SystemDriver, context: UseCaseContext) -> None:
         super().__init__(driver, context)
         self._car_id_alias: str | None = None
-        self._name: str | None = None
-        self._connector_types: list | None = None
-        self._battery_charge_limit: int | None = None
-        self._battery_size: int | None = None
-        self._max_kw_ac: int | None = None
-        self._max_kw_dc: int | None = None
+        self._name: str = "Updated Car"
+        self._connector_types: list = ["CCS"]
+        self._battery_charge_limit: int = 80
+        self._battery_size: int = 60
+        self._max_kw_ac: int = 11
+        self._max_kw_dc: int = 100
 
     def car_id(self, alias: str) -> "UpdateCar":
         self._car_id_alias = alias
@@ -61,8 +61,8 @@ class UpdateCar(BaseUseCase[SystemDriver, None, VoidVerification]):
     def execute(self) -> UseCaseResult[None, VoidVerification]:
         car_id = self._context.get_result_value(self._car_id_alias)
         request = UpdateCarRequest(
-            name=self._name or "",
-            connector_types=self._connector_types or [],
+            name=self._name,
+            connector_types=self._connector_types,
             battery_charge_limit=self._battery_charge_limit,
             battery_size=self._battery_size,
             max_kw_ac=self._max_kw_ac,

@@ -1,3 +1,4 @@
+from system_test.core.drivers.commons.utils.datetime_utils import DateTimeUtils
 from system_test.core.drivers.system.commons.dtos.reservation_request import (
     CreateReservationRequest,
 )
@@ -30,6 +31,26 @@ class CreateReservationVerification(ResponseVerification[ReservationResponse]):
         )
         return self
 
+    def has_valid_id(self) -> "CreateReservationVerification":
+        assert self._response["id"], (
+            f"Expected a non-empty reservation id but got '{self._response['id']}'"
+        )
+        return self
+
+    def has_car_id(self, alias: str) -> "CreateReservationVerification":
+        expected = self._context.expand_aliases(alias)
+        assert str(self._response["car_id"]) == expected, (
+            f"Expected car_id '{expected}' but got '{self._response['car_id']}'"
+        )
+        return self
+
+    def has_charging_point_id(self, alias: str) -> "CreateReservationVerification":
+        expected = self._context.expand_aliases(alias)
+        assert str(self._response["charging_point_id"]) == expected, (
+            f"Expected charging_point_id '{expected}' but got '{self._response['charging_point_id']}'"
+        )
+        return self
+
 
 class CreateReservation(
     BaseUseCase[SystemDriver, ReservationResponse, CreateReservationVerification]
@@ -57,8 +78,9 @@ class CreateReservation(
         self._reservation_id_alias: str | None = None
         self._car_id_alias: str | None = None
         self._charging_point_id_alias: str | None = None
-        self._start_time: str | None = None
-        self._end_time: str | None = None
+        _now = DateTimeUtils.get_current_zulu_time()
+        self._start_time: str = DateTimeUtils.add_hours_to_zulu_time(_now, 1)
+        self._end_time: str = DateTimeUtils.add_hours_to_zulu_time(_now, 5)
 
     def reservation_id(self, alias: str) -> "CreateReservation":
         """Result alias under which the created reservation ID is stored."""
@@ -92,8 +114,8 @@ class CreateReservation(
         request = CreateReservationRequest(
             car_id=car_id,
             charging_point_id=charging_point_id,
-            start_time=self._start_time or "",
-            end_time=self._end_time or "",
+            start_time=self._start_time,
+            end_time=self._end_time,
         )
         result = self._driver.create_reservation(request)
 

@@ -22,8 +22,26 @@ class AddCarVerification(ResponseVerification[AddCarResponse]):
         return self
 
     def has_connector_types(self, expected: list) -> "AddCarVerification":
-        assert self._response["connector_types"] == expected, (
-            f"Expected connector types {expected} but got {self._response['connector_types']}"
+        assert sorted(self._response["connector_types"]) == sorted(expected), (
+            f"Expected connector types {sorted(expected)} but got {sorted(self._response['connector_types'])}"
+        )
+        return self
+
+    def has_valid_id(self) -> "AddCarVerification":
+        assert self._response["id"], (
+            f"Expected a non-empty id but got '{self._response['id']}'"
+        )
+        return self
+
+    def has_battery_charge_limit(self, expected: int) -> "AddCarVerification":
+        assert self._response["battery_charge_limit"] == expected, (
+            f"Expected battery_charge_limit {expected} but got {self._response['battery_charge_limit']}"
+        )
+        return self
+
+    def has_battery_size(self, expected: int) -> "AddCarVerification":
+        assert self._response["battery_size"] == expected, (
+            f"Expected battery_size {expected} but got {self._response['battery_size']}"
         )
         return self
 
@@ -46,12 +64,12 @@ class AddCar(BaseUseCase[SystemDriver, AddCarResponse, AddCarVerification]):
     def __init__(self, driver: SystemDriver, context: UseCaseContext) -> None:
         super().__init__(driver, context)
         self._car_id_alias: str | None = None
-        self._name: str | None = None
-        self._connector_types: list | None = None
-        self._battery_charge_limit: int | None = None
-        self._battery_size = None
-        self._max_kw_ac: int | None = None
-        self._max_kw_dc: int | None = None
+        self._name: str = "Test Car"
+        self._connector_types: list = ["CCS"]
+        self._battery_charge_limit: int = 80
+        self._battery_size: int = 60
+        self._max_kw_ac: int = 11
+        self._max_kw_dc: int = 100
 
     def car_id(self, alias: str) -> "AddCar":
         """Result alias under which the created car ID is stored."""
@@ -84,8 +102,8 @@ class AddCar(BaseUseCase[SystemDriver, AddCarResponse, AddCarVerification]):
 
     def execute(self) -> UseCaseResult[AddCarResponse, AddCarVerification]:
         request = AddCarRequest(
-            name=self._name or "",
-            connector_types=self._connector_types or [],
+            name=self._name,
+            connector_types=self._connector_types,
             battery_charge_limit=self._battery_charge_limit,
             battery_size=self._battery_size,
             max_kw_ac=self._max_kw_ac,
