@@ -9,35 +9,34 @@ import pytest
 
 from system_test.core.channels.channel_decorator import channel
 from system_test.core.channels.channel_type import ChannelType
-from system_test.core.drivers.commons.result_assert import ResultAssert
-from system_test.core.drivers.driver_factory import DriverFactory
-from system_test.core.drivers.system.commons.dtos.auth_request import LoginRequest
+from system_test.core.use_case_dsl import UseCaseDsl
 
 
 class TestSystemSmoke:
     @pytest.fixture(autouse=True)
     def setup(self):
-        self.driver = DriverFactory.create_system_driver_for_current_channel()
+        self.app = UseCaseDsl()
         yield
-        self.driver.close()
+        self.app.close()
 
     @channel(ChannelType.API, ChannelType.UI)
     def test_should_be_able_to_go_to_system(self):
-        result = self.driver.go_to_system()
-        ResultAssert.assert_that_result(result).is_success()
+        self.app.system().go_to_system().execute().should_succeed()
 
     @channel(ChannelType.API, ChannelType.UI)
     def test_should_be_able_to_login(self):
-        result = self.driver.login(
-            LoginRequest(username="addisonw", password="addisonwpass")
+        (
+            self.app.system()
+            .login()
+            .username("addisonw")
+            .password("addisonwpass")
+            .execute()
+            .should_succeed()
         )
-        ResultAssert.assert_that_result(result).is_success()
 
     @channel(ChannelType.API, ChannelType.UI)
     def test_should_be_able_to_list_cars(self):
-        result_login = self.driver.login(
-            LoginRequest(username="addisonw", password="addisonwpass")
-        )
-        ResultAssert.assert_that_result(result_login).is_success()
-        result = self.driver.list_cars()
-        ResultAssert.assert_that_result(result).is_success()
+        self.app.system().login().username("addisonw").password(
+            "addisonwpass"
+        ).execute().should_succeed()
+        self.app.system().list_cars().execute().should_succeed()

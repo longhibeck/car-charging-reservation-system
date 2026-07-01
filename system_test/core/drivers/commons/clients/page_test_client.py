@@ -75,6 +75,10 @@ class PageTestClient:
         """Get HTML5 validation message from an input element"""
         return self._page.locator(selector).evaluate("el => el.validationMessage")
 
+    def read_text_content(self, selector: str) -> str:
+        """Read text content from an element; empty string when not found."""
+        return self._page.locator(selector).text_content() or ""
+
     def goto(self, path: str = "/"):
         """Navigate to a path relative to base_url"""
         url = f"{self.get_base_url()}{path}"

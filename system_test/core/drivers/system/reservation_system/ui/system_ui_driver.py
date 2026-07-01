@@ -130,11 +130,37 @@ class SystemUiDriver(SystemDriver):
             )
 
         self._current_page = Pages.CARS
-        return Result.success()
+        car_data = self._cars_page.read_last_car()
+        return Result.success(
+            AddCarResponse(
+                id=car_data["id"],
+                name=car_data["name"],
+                connector_types=car_data["connector_types"],
+                battery_charge_limit=car_data["battery_charge_limit"],
+                battery_size=car_data["battery_size"],
+                max_kw_ac=car_data["max_kw_ac"],
+                max_kw_dc=car_data["max_kw_dc"],
+            )
+        )
 
     def list_cars(self) -> Result[list]:
         self.ensure_on_cars_page()
-        return Result.success()
+        assert self._cars_page is not None
+        cars = self._cars_page.read_all_cars()
+        return Result.success(
+            [
+                AddCarResponse(
+                    id=car["id"],
+                    name=car["name"],
+                    connector_types=car["connector_types"],
+                    battery_charge_limit=car["battery_charge_limit"],
+                    battery_size=car["battery_size"],
+                    max_kw_ac=car["max_kw_ac"],
+                    max_kw_dc=car["max_kw_dc"],
+                )
+                for car in cars
+            ]
+        )
 
     def ensure_on_login_page(self) -> None:
         if self._current_page != Pages.LOGIN:
