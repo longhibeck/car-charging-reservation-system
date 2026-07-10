@@ -1,5 +1,3 @@
-import os
-
 import pytest
 
 from system_test.core.channels.channel_context import ChannelContext
@@ -18,10 +16,6 @@ def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
         return
 
     channels = list(marker.kwargs["base_channels"])
-
-    env = os.getenv("CHANNEL")
-    if env:
-        channels = [c for c in channels if c.lower() == env.lower()] or channels
 
     metafunc.parametrize(
         "_channel_ctx",
